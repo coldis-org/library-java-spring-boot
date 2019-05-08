@@ -18,7 +18,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
  * Default configuration.
  */
 @Configuration
-@ConditionalOnProperty(name = "org.coldis.configuration.default-enabled", havingValue = "true")
+@ConditionalOnProperty(name = "org.coldis.configuration.default-enabled", havingValue = "true", matchIfMissing = true)
 @PropertySource(value = { DefaultAutoConfiguration.DEFAULT_PROPERTIES, DefaultAutoConfiguration.INTEGRATION_PROPERTIES,
 				DefaultAutoConfiguration.CLIENT_PROPERTIES },
 ignoreResourceNotFound = true)
