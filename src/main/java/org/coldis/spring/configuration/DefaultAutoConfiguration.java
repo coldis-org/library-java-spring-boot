@@ -2,12 +2,15 @@ package org.coldis.spring.configuration;
 
 import java.util.Locale;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
@@ -40,6 +43,18 @@ public class DefaultAutoConfiguration {
 	 * Client properties.
 	 */
 	public static final String CLIENT_PROPERTIES = "classpath:client.properties";
+
+	/**
+	 * Creates the rest template.
+	 *
+	 * @return The rest template.
+	 */
+	@Primary
+	@Bean(name = "restTemplate")
+	@ConditionalOnMissingBean(value = RestOperations.class)
+	public RestTemplate createRestTemplate() {
+		return new RestTemplate();
+	}
 
 	/**
 	 * Creates the locale resolver.
