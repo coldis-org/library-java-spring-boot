@@ -8,12 +8,14 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
 
 /**
  * JMS auto configuration.
  */
+@EnableJms
 @Configuration
 @ConditionalOnClass(JmsTemplate.class)
 public class JmsAutoConfiguration {
