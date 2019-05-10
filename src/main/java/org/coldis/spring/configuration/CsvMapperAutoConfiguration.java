@@ -1,7 +1,7 @@
 package org.coldis.spring.configuration;
 
 import org.coldis.library.serialization.csv.CsvHelper;
-import org.coldis.spring.converter.CsvMessageConverter;
+import org.coldis.spring.controller.CsvMessageConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
