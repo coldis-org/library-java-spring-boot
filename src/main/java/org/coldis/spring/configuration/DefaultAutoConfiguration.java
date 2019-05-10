@@ -2,7 +2,6 @@ package org.coldis.spring.configuration;
 
 import java.util.Locale;
 
-import org.coldis.library.helper.ExtendedValidator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -10,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
@@ -58,15 +56,6 @@ public class DefaultAutoConfiguration {
 		return new RestTemplate();
 	}
 
-	/**
-	 * Creates the extended validator.
-	 *
-	 * @return The extended validator.
-	 */
-	@Bean(name = "extendedValidator")
-	public ExtendedValidator createExtendedValidator() {
-		return new ExtendedValidator(new LocalValidatorFactoryBean());
-	}
 
 	/**
 	 * Creates the locale resolver.
