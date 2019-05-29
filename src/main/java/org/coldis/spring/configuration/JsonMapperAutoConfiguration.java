@@ -27,6 +27,8 @@ public class JsonMapperAutoConfiguration {
 	public ObjectMapper jsonObjectMapper(final Jackson2ObjectMapperBuilder builder) {
 		// Creates the object mapper.
 		ObjectMapper objectMapper = builder.createXmlMapper(false).build();
+		// Registers the date/time module.
+		objectMapper.registerModule(ObjectMapperHelper.getDateTimeModule());
 		// Registers the subtypes from the base packages.
 		objectMapper = ObjectMapperHelper.addSubtypesFromPackage(objectMapper, DefaultAutoConfiguration.BASE_PACKAGE);
 		// Returns the configured object mapper.
