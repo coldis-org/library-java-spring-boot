@@ -56,7 +56,6 @@ public class DefaultAutoConfiguration {
 		return new RestTemplate();
 	}
 
-
 	/**
 	 * Creates the locale resolver.
 	 *
