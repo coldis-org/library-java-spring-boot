@@ -9,63 +9,63 @@ import org.springframework.stereotype.Component;
  * Number properties.
  */
 @Component
-@ConfigurationProperties(prefix = "org.coldis.config.number")
+@ConfigurationProperties(prefix = "org.coldis.configuration.number")
 public class NumberProperties {
 
 	/**
-	 * Persistence scale.
+	 * Calculation scale.
 	 */
-	private static Integer persistenceScale;
+	public static Integer CALCULATION_SCALE;
 
 	/**
-	 * /** Percentage scale.
+	 * Rate scale.
 	 */
-	private static Integer percentageScale;
+	public static Integer RATE_SCALE;
 
 	/**
 	 * Currency scale.
 	 */
-	private static Integer currencyScale;
+	public static Integer CURRENCY_SCALE;
 
 	/**
 	 * Rounding mode.
 	 */
-	private static RoundingMode roundingMode;
+	public static RoundingMode ROUNDING_MODE;
 
 	/**
-	 * Gets the persistence scale.
+	 * Gets the calculation scale.
 	 *
-	 * @return The persistence scale.
+	 * @return The calculation scale.
 	 */
-	public static Integer getPersistenceScale() {
-		return NumberProperties.persistenceScale;
+	public Integer getCalculationScale() {
+		return NumberProperties.CALCULATION_SCALE;
 	}
 
 	/**
-	 * Sets the persistence scale.
+	 * Sets the calculation scale.
 	 *
-	 * @param persistenceScale New persistence scale.
+	 * @param calculationScale New calculation scale.
 	 */
-	public static void setPersistenceScale(final Integer persistenceScale) {
-		NumberProperties.persistenceScale = persistenceScale;
+	public void setCalculationScale(final Integer calculationScale) {
+		NumberProperties.CALCULATION_SCALE = calculationScale;
 	}
 
 	/**
-	 * Gets the percentage scale.
+	 * Gets the rate scale.
 	 *
-	 * @return The percentage scale.
+	 * @return The rate scale.
 	 */
-	public static Integer getPercentageScale() {
-		return NumberProperties.percentageScale;
+	public Integer getRateScale() {
+		return NumberProperties.RATE_SCALE;
 	}
 
 	/**
-	 * Sets the percentage scale.
+	 * Sets the rate scale.
 	 *
-	 * @param percentageScale New percentage scale.
+	 * @param rateScale New rate scale.
 	 */
-	public static void setPercentageScale(final Integer percentageScale) {
-		NumberProperties.percentageScale = percentageScale;
+	public void setRateScale(final Integer rateScale) {
+		NumberProperties.RATE_SCALE = rateScale;
 	}
 
 	/**
@@ -73,8 +73,8 @@ public class NumberProperties {
 	 *
 	 * @return The currency scale.
 	 */
-	public static Integer getCurrencyScale() {
-		return NumberProperties.currencyScale;
+	public Integer getCurrencyScale() {
+		return NumberProperties.CURRENCY_SCALE;
 	}
 
 	/**
@@ -82,8 +82,8 @@ public class NumberProperties {
 	 *
 	 * @param currencyScale New currency scale.
 	 */
-	public static void setCurrencyScale(final Integer currencyScale) {
-		NumberProperties.currencyScale = currencyScale;
+	public void setCurrencyScale(final Integer currencyScale) {
+		NumberProperties.CURRENCY_SCALE = currencyScale;
 	}
 
 	/**
@@ -91,8 +91,8 @@ public class NumberProperties {
 	 *
 	 * @return The rounding mode.
 	 */
-	public static RoundingMode getRoundingMode() {
-		return NumberProperties.roundingMode;
+	public RoundingMode getRoundingMode() {
+		return NumberProperties.ROUNDING_MODE;
 	}
 
 	/**
@@ -100,8 +100,8 @@ public class NumberProperties {
 	 *
 	 * @param roundingMode New rounding mode.
 	 */
-	public static void setRoundingMode(final RoundingMode roundingMode) {
-		NumberProperties.roundingMode = roundingMode;
+	public void setRoundingMode(final RoundingMode roundingMode) {
+		NumberProperties.ROUNDING_MODE = roundingMode;
 	}
 
 }
