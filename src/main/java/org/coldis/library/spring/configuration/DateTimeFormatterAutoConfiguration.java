@@ -1,4 +1,4 @@
-package org.coldis.spring.configuration;
+package org.coldis.library.spring.configuration;
 
 import org.coldis.library.helper.DateTimeHelper;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * Date/time formatter configuration.
  */
 @Configuration
-public class DateTimeFormatterConfiguration implements WebMvcConfigurer {
+public class DateTimeFormatterAutoConfiguration implements WebMvcConfigurer {
 
 	/**
 	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurer#addFormatters(org.springframework.format.FormatterRegistry)

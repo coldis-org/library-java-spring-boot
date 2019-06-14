@@ -1,4 +1,4 @@
-package org.coldis.spring;
+package org.coldis.library.spring;
 
 import java.nio.charset.Charset;
 import java.util.Locale;

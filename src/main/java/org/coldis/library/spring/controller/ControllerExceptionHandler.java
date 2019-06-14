@@ -1,4 +1,4 @@
-package org.coldis.spring.controller;
+package org.coldis.library.spring.controller;
 
 import java.util.List;
 import java.util.stream.Collectors;

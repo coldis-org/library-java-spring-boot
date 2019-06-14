@@ -1,4 +1,4 @@
-package org.coldis.spring.properties;
+package org.coldis.library.spring.properties;
 
 import java.math.RoundingMode;
 

@@ -1,4 +1,4 @@
-package org.coldis.spring.configuration;
+package org.coldis.library.spring.configuration;
 
 import org.coldis.library.serialization.ObjectMapperHelper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
