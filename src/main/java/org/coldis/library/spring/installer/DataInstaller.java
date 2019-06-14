@@ -108,8 +108,8 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 			final Map<String, Object> dataObject) {
 		// Service operation URL.
 		final StringBuffer serviceOperationUrl = new StringBuffer(serviceOperationBaseUrl);
-		// If the search uses path strategy.
-		if (DataInstallerSearchStrategy.PATH.equals(searchStrategy)) {
+		// If the search uses parameter strategy.
+		if (DataInstallerSearchStrategy.PARAMETER.equals(searchStrategy)) {
 			// Appends the search context.
 			serviceOperationUrl.append("?");
 		}
@@ -209,10 +209,10 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 					try {
 						existentDataObject = (this.serviceClient.executeOperation(
 								this.getSearchOperationUrl(
-										installationMetadata.getServiceOperationUrl()
-										+ installationMetadata.getSearchOperationPath(),
-										installationMetadata.getSearchPropertiesStrategy(),
-										installationMetadata.getSearchProperties(), existentDataObject),
+										installationMetadata.getServiceOperationUrl() + "/"
+												+ installationMetadata.getSearchOperationPath(),
+												installationMetadata.getSearchPropertiesStrategy(),
+												installationMetadata.getSearchProperties(), dataObject),
 								HttpMethod.GET, null, null, null,
 								new ParameterizedTypeReference<Map<String, Object>>() {
 								}).getBody());
@@ -244,24 +244,28 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 					}
 					// If the object does not exist.
 					else {
-						// Tries to update the object.
-						try {
-							this.serviceClient.executeOperation(
-									this.getSearchOperationUrl(installationMetadata.getServiceOperationUrl(),
-											installationMetadata.getIdPropertiesStrategy(),
-											installationMetadata.getIdProperties(), existentDataObject),
-									HttpMethod.PUT, null, dataObject, null, new ParameterizedTypeReference<Void>() {
-									});
-							DataInstaller.LOGGER.debug("Object '" + ObjectMapperHelper.serialize(this.objectMapper,
-									dataObject, ModelView.Public.class, true) + "' updated.");
-							updatedObjects++;
-						}
-						// If the object cannot be updated.
-						catch (final Exception exception) {
-							// Logs it.
-							DataInstaller.LOGGER.error("Object '" + ObjectMapperHelper.serialize(this.objectMapper,
-									dataObject, ModelView.Public.class, true) + "' could not be created.", exception);
-							failedObjects++;
+						// If data should be updated.
+						if (!installationMetadata.getCreateOnly()) {
+							// Tries to update the object.
+							try {
+								this.serviceClient.executeOperation(
+										this.getSearchOperationUrl(installationMetadata.getServiceOperationUrl(),
+												installationMetadata.getIdPropertiesStrategy(),
+												installationMetadata.getIdProperties(), existentDataObject),
+										HttpMethod.PUT, null, dataObject, null, new ParameterizedTypeReference<Void>() {
+										});
+								DataInstaller.LOGGER.debug("Object '" + ObjectMapperHelper.serialize(this.objectMapper,
+										dataObject, ModelView.Public.class, true) + "' updated.");
+								updatedObjects++;
+							}
+							// If the object cannot be updated.
+							catch (final Exception exception) {
+								// Logs it.
+								DataInstaller.LOGGER.error("Object '" + ObjectMapperHelper.serialize(this.objectMapper,
+										dataObject, ModelView.Public.class, true) + "' could not be created.",
+										exception);
+								failedObjects++;
+							}
 						}
 					}
 				}

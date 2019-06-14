@@ -62,7 +62,9 @@ public class TestService {
 		final TestEntity retrievedEntity = this.testRepository.findById(new TestEntityKey(property1, property2))
 				.orElse(null);
 		// Updates the entity properties.
-		BeanUtils.copyProperties(testEntity, retrievedEntity);
+		BeanUtils.copyProperties(testEntity, retrievedEntity, "createdAt", "updatedAt");
+		// Saves the entity.
+		retrievedEntity.setUpdatedAt(null);
 		this.testRepository.save(retrievedEntity);
 	}
 
