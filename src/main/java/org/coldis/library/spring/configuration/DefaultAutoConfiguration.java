@@ -5,19 +5,15 @@ import java.util.Locale;
 import org.coldis.library.persistence.configuration.AopTransactionManagementAutoConfiguration;
 import org.coldis.library.persistence.configuration.JpaAutoConfiguration;
 import org.coldis.library.persistence.configuration.ProxyTransactionManagementAutoConfiguration;
-import org.coldis.library.service.client.GenericRestServiceClient;
 import org.coldis.library.spring.controller.ControllerExceptionHandler;
 import org.coldis.library.spring.installer.DataInstaller;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.web.client.RestOperations;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
@@ -55,30 +51,6 @@ public class DefaultAutoConfiguration {
 	 * Client properties.
 	 */
 	public static final String CLIENT_PROPERTIES = "classpath:client.properties";
-
-	/**
-	 * Creates the rest template.
-	 *
-	 * @return The rest template.
-	 */
-	@Primary
-	@Bean(name = "restTemplate")
-	@ConditionalOnMissingBean(value = RestOperations.class)
-	public RestTemplate createRestTemplate() {
-		return new RestTemplate();
-	}
-
-	/**
-	 * Creates the service client.
-	 *
-	 * @return The service client.
-	 */
-	@Primary
-	@Bean(name = "restServiceClient")
-	@ConditionalOnMissingBean(value = GenericRestServiceClient.class)
-	public GenericRestServiceClient createRestServiceClient() {
-		return new GenericRestServiceClient();
-	}
 
 	/**
 	 * Creates the locale resolver.
