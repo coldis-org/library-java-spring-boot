@@ -22,7 +22,6 @@ public class DateTimeFormatterAutoConfiguration implements WebMvcConfigurer {
 		registrar.setDateFormatter(DateTimeHelper.DATE_TIME_FORMATTER);
 		registrar.setDateTimeFormatter(DateTimeHelper.DATE_TIME_FORMATTER);
 		registrar.setTimeFormatter(DateTimeHelper.DATE_TIME_FORMATTER);
-		registrar.setUseIsoFormat(true);
 		registrar.registerFormatters(registry);
 	}
 
