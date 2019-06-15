@@ -32,18 +32,18 @@
 		<dependency>
 			<groupId>org.coldis.library</groupId>
 			<artifactId>service-client</artifactId>
-			<version>0.0.3</version>
+			<version>0.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.coldis.library</groupId>
 			<artifactId>persistence</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.3</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.coldis.library</groupId>
 			<artifactId>test</artifactId>
-			<version>0.0.3</version>
+			<version>0.0.4</version>
 			<scope>test</scope>
 		</dependency>
 
