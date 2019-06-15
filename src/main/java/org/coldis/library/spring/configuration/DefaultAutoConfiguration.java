@@ -2,6 +2,9 @@ package org.coldis.library.spring.configuration;
 
 import java.util.Locale;
 
+import org.coldis.library.persistence.configuration.AopTransactionManagementAutoConfiguration;
+import org.coldis.library.persistence.configuration.JpaAutoConfiguration;
+import org.coldis.library.persistence.configuration.ProxyTransactionManagementAutoConfiguration;
 import org.coldis.library.service.client.GenericRestServiceClient;
 import org.coldis.library.spring.controller.ControllerExceptionHandler;
 import org.coldis.library.spring.installer.DataInstaller;
@@ -28,7 +31,9 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 ignoreResourceNotFound = true)
 @AutoConfigureBefore(value = { AspectJAutoConfiguration.class, CsvMapperAutoConfiguration.class,
 				DateTimeFormatterAutoConfiguration.class, JmsAutoConfiguration.class, JsonMapperAutoConfiguration.class,
-				ValidatorAutoConfiguration.class, ControllerExceptionHandler.class, DataInstaller.class })
+				ValidatorAutoConfiguration.class, ControllerExceptionHandler.class, DataInstaller.class,
+				AopTransactionManagementAutoConfiguration.class, ProxyTransactionManagementAutoConfiguration.class,
+				JpaAutoConfiguration.class })
 public class DefaultAutoConfiguration {
 
 	/**
@@ -68,6 +73,7 @@ public class DefaultAutoConfiguration {
 	 *
 	 * @return The service client.
 	 */
+	@Primary
 	@Bean(name = "restServiceClient")
 	@ConditionalOnMissingBean(value = GenericRestServiceClient.class)
 	public GenericRestServiceClient createRestServiceClient() {
