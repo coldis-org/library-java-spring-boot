@@ -6,12 +6,14 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.coldis.library.model.ModelView;
 import org.coldis.library.serialization.ObjectMapperHelper;
 import org.coldis.library.service.client.GenericRestServiceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -68,6 +70,12 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 	private String data;
 
 	/**
+	 * Bean factory.
+	 */
+	@Autowired
+	private BeanFactory beans;
+
+	/**
 	 * Resource pattern resolver.
 	 */
 	@Autowired
@@ -78,12 +86,6 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 	 */
 	@Autowired
 	private ObjectMapper objectMapper;
-
-	/**
-	 * Service client.
-	 */
-	@Autowired
-	private GenericRestServiceClient serviceClient;
 
 	/**
 	 * @see org.springframework.context.EmbeddedValueResolverAware#
@@ -165,6 +167,17 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 	}
 
 	/**
+	 * Gets the REST service client.
+	 *
+	 * @param  name Service client bean name.
+	 * @return      The REST service client.
+	 */
+	private GenericRestServiceClient getGenericRestServiceClient(final String name) {
+		return StringUtils.isEmpty(name) ? this.beans.getBean(GenericRestServiceClient.class)
+				: this.beans.getBean(name, GenericRestServiceClient.class);
+	}
+
+	/**
 	 * Installs data.
 	 */
 	@ResponseStatus(HttpStatus.OK)
@@ -201,13 +214,16 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 				// Gets the installation metadata.
 				final DataInstallationMetadata installationMetadata = ObjectMapperHelper.deserialize(this.objectMapper,
 						dataSetContent, DataInstallationMetadata.class, false);
+				// Gets the service client bean to be used.
+				final GenericRestServiceClient serviceClient = this
+						.getGenericRestServiceClient(installationMetadata.getServiceClientBean());
 				// For each data object to be installed.
 				for (final Map<String, Object> dataObject : installationMetadata.getData()) {
 					// Retrieved object.
 					Map<String, Object> existentDataObject = null;
 					// Tries to get existent data.
 					try {
-						existentDataObject = (this.serviceClient.executeOperation(
+						existentDataObject = (serviceClient.executeOperation(
 								this.getSearchOperationUrl(
 										installationMetadata.getServiceOperationUrl() + "/"
 												+ installationMetadata.getSearchOperationPath(),
@@ -227,7 +243,7 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 					if (existentDataObject == null) {
 						// Tries to create the object.
 						try {
-							this.serviceClient.executeOperation(installationMetadata.getServiceOperationUrl(),
+							serviceClient.executeOperation(installationMetadata.getServiceOperationUrl(),
 									HttpMethod.POST, null, dataObject, null, new ParameterizedTypeReference<Void>() {
 							});
 							DataInstaller.LOGGER.debug("Object '" + ObjectMapperHelper.serialize(this.objectMapper,
@@ -248,7 +264,7 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 						if (!installationMetadata.getCreateOnly()) {
 							// Tries to update the object.
 							try {
-								this.serviceClient.executeOperation(
+								serviceClient.executeOperation(
 										this.getSearchOperationUrl(installationMetadata.getServiceOperationUrl(),
 												installationMetadata.getIdPropertiesStrategy(),
 												installationMetadata.getIdProperties(), existentDataObject),

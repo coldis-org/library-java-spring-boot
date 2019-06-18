@@ -10,6 +10,11 @@ import java.util.Map;
 public class DataInstallationMetadata {
 
 	/**
+	 * Service client bean.
+	 */
+	private String serviceClientBean;
+
+	/**
 	 * Service operation URL.
 	 */
 	private String serviceOperationUrl = "";
@@ -48,6 +53,24 @@ public class DataInstallationMetadata {
 	 * Data to be installed.
 	 */
 	private List<Map<String, Object>> data;
+
+	/**
+	 * Gets the serviceClientBean.
+	 *
+	 * @return The serviceClientBean.
+	 */
+	public String getServiceClientBean() {
+		return this.serviceClientBean;
+	}
+
+	/**
+	 * Sets the serviceClientBean.
+	 *
+	 * @param serviceClientBean New serviceClientBean.
+	 */
+	public void setServiceClientBean(final String serviceClientBean) {
+		this.serviceClientBean = serviceClientBean;
+	}
 
 	/**
 	 * Gets the service operation URL.
