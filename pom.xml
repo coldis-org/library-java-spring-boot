@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -30,6 +32,10 @@
 	<properties>
 		<project.config.spring.test.args>${project.config.spring.aop.args}</project.config.spring.test.args>
 		<project.config.spring.aop.phase>process-resources</project.config.spring.aop.phase>
+
+		<project.config.swagger.scope>compile</project.config.swagger.scope>
+
+		<springfox.swagger.version>2.9.2</springfox.swagger.version>
 	</properties>
 
 	<scm>
@@ -106,6 +112,20 @@
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-csv</artifactId>
 			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox.swagger.version}</version>
+			<scope>${project.config.swagger.scope}</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox.swagger.version}</version>
+			<scope>${project.config.swagger.scope}</scope>
 		</dependency>
 
 		<dependency>
