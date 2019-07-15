@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
-@ConditionalOnProperty(name = "environment", havingValue = "development", matchIfMissing = false)
+@ConditionalOnProperty(name = "environment", havingValue = "development", matchIfMissing = true)
 public class SwaggerAutoConfiguration {
 
 	/**
