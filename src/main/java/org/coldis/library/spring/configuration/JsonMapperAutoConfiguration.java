@@ -1,6 +1,8 @@
 package org.coldis.library.spring.configuration;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.coldis.library.serialization.ObjectMapperHelper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +19,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class JsonMapperAutoConfiguration {
 
 	/**
+	 * JSON type packages.
+	 */
+	@Value(value = "#{'${org.coldis.configuration.json-type-packages}'.split(',')}")
+	private String[] jsonTypePackages;
+
+	/**
 	 * Creates the JSON object mapper.
 	 *
 	 * @param  builder JSON object mapper builder.
@@ -31,6 +39,14 @@ public class JsonMapperAutoConfiguration {
 		objectMapper.registerModule(ObjectMapperHelper.getDateTimeModule());
 		// Registers the subtypes from the base packages.
 		objectMapper = ObjectMapperHelper.addSubtypesFromPackage(objectMapper, DefaultAutoConfiguration.BASE_PACKAGE);
+		// For each type package.
+		if (!ArrayUtils.isEmpty(this.jsonTypePackages)) {
+			// For each type package.
+			for (final String typePackage : this.jsonTypePackages) {
+				// Registers the subtypes from the base packages.
+				objectMapper = ObjectMapperHelper.addSubtypesFromPackage(objectMapper, typePackage);
+			}
+		}
 		// Returns the configured object mapper.
 		return objectMapper;
 	}
