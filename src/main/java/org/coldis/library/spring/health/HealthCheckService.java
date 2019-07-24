@@ -1,13 +1,9 @@
 package org.coldis.library.spring.health;
 
-import org.coldis.library.helper.DateTimeHelper;
-import org.coldis.library.persistence.keyvalue.KeyValue;
-import org.coldis.library.persistence.keyvalue.KeyValueRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,10 +28,10 @@ public class HealthCheckService {
 	public static final String HEALTH_CHECK_KEY = "health-check";
 
 	/**
-	 * Health check repository.
+	 * Repository health check service.
 	 */
 	@Autowired(required = false)
-	private KeyValueRepository<HealthCheckValue> healthCheckRepository;
+	private RepositoryHealthCheckService repositoryHealthCheckService;
 
 	/**
 	 * Health check service.
@@ -47,12 +43,12 @@ public class HealthCheckService {
 		HealthCheckService.LOGGER.debug("Health check starting.");
 		final long initMillis = System.currentTimeMillis();
 		try {
-			// The health check value.
+			// The health check default value.
 			Long checkValue = HealthCheckValue.VALUE;
 			// If the repository is available.
-			if (this.healthCheckRepository != null) {
-				// Updates the health check.
-				checkValue = this.updateCheckEntity();
+			if (this.repositoryHealthCheckService != null) {
+				// Touches the repository.
+				checkValue = this.repositoryHealthCheckService.touch();
 			}
 			// Returns the entity id.
 			return checkValue;
@@ -70,28 +66,6 @@ public class HealthCheckService {
 			HealthCheckService.LOGGER
 			.debug("Health check successfully finished within '" + executionTime + "' milliseconds.");
 		}
-	}
-
-	/**
-	 * Updates the health check.
-	 *
-	 * @return The health check value.
-	 */
-	@Transactional
-	public Long updateCheckEntity() {
-		Long checkValue;
-		// Gets the health check object.
-		KeyValue<HealthCheckValue> healthCheck = this.healthCheckRepository
-				.findById(HealthCheckService.HEALTH_CHECK_KEY).orElse(null);
-		// If the health check does not exist yet.
-		if (healthCheck == null) {
-			// Creates a new health check.
-			healthCheck = new KeyValue<>(HealthCheckService.HEALTH_CHECK_KEY, new HealthCheckValue());
-		}
-		// Saves the health check again.
-		healthCheck.setUpdatedAt(DateTimeHelper.getCurrentLocalDateTime());
-		checkValue = this.healthCheckRepository.save(healthCheck).getValue().getValue();
-		return checkValue;
 	}
 
 }
