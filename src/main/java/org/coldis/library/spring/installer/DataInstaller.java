@@ -173,8 +173,9 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 	 * @return      The REST service client.
 	 */
 	private GenericRestServiceClient getGenericRestServiceClient(final String name) {
-		return StringUtils.isEmpty(name) ? this.beans.getBean(GenericRestServiceClient.class)
-				: this.beans.getBean(name, GenericRestServiceClient.class);
+		return StringUtils.isEmpty(name)
+				? this.beans.getBean("restServiceClient", GenericRestServiceClient.class)
+						: this.beans.getBean(name, GenericRestServiceClient.class);
 	}
 
 	/**
