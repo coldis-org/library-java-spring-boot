@@ -22,9 +22,9 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
  */
 @Configuration
 @ConditionalOnProperty(name = "org.coldis.configuration.default-enabled", havingValue = "true", matchIfMissing = true)
-@PropertySource(value = { DefaultAutoConfiguration.DEFAULT_PROPERTIES, DefaultAutoConfiguration.INTEGRATION_PROPERTIES,
-				DefaultAutoConfiguration.CLIENT_PROPERTIES },
-ignoreResourceNotFound = true)
+@PropertySource(
+		value = { DefaultAutoConfiguration.DEFAULT_PROPERTIES, DefaultAutoConfiguration.INTEGRATION_PROPERTIES },
+		ignoreResourceNotFound = true)
 @AutoConfigureBefore(value = { AspectJAutoConfiguration.class, CsvMapperAutoConfiguration.class,
 				DateTimeFormatterAutoConfiguration.class, JmsAutoConfiguration.class, JsonMapperAutoConfiguration.class,
 				ValidatorAutoConfiguration.class, ControllerExceptionHandler.class, DataInstaller.class,
@@ -46,11 +46,6 @@ public class DefaultAutoConfiguration {
 	 * Integration properties.
 	 */
 	public static final String INTEGRATION_PROPERTIES = "classpath:integration.properties";
-
-	/**
-	 * Client properties.
-	 */
-	public static final String CLIENT_PROPERTIES = "classpath:client.properties";
 
 	/**
 	 * Creates the locale resolver.

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  * Message service.
  */
 @Service
-public class MessageService {
+public class LocalizedMessageService {
 
 	/**
 	 * Message source.
