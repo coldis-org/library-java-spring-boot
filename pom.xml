@@ -53,7 +53,7 @@
 		<dependency>
 			<groupId>org.coldis.library</groupId>
 			<artifactId>persistence</artifactId>
-			<version>0.0.7</version>
+			<version>0.0.8</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

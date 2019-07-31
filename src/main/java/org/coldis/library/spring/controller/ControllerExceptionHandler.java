@@ -73,7 +73,7 @@ public class ControllerExceptionHandler {
 		// Enriches the violation messages.
 		final List<SimpleMessage> violations = exception.getConstraintViolations().stream()
 				.map(violation -> this.enrichMessage(new SimpleMessage(violation.getMessageTemplate(),
-						violation.getMessage(), violation.getExecutableParameters())))
+						violation.getPropertyPath() +": " + violation.getMessage(), violation.getExecutableParameters())))
 				.collect(Collectors.toList());
 		// Returns the messages.
 		ControllerExceptionHandler.LOGGER.error("Contraint violation exception returned. Violations: "
