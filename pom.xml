@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -28,12 +30,11 @@
 	</developers>
 
 	<properties>
+		<project.config.source.test.compile.annotationProcessors>org.coldis.library.dto.DtoGenerator,org.coldis.library.service.client.generator.ServiceClientGenerator</project.config.source.test.compile.annotationProcessors>
 		<project.config.spring.test.args>${project.config.spring.aop.args}</project.config.spring.test.args>
 		<project.config.spring.aop.phase>process-resources</project.config.spring.aop.phase>
 
 		<project.config.swagger.scope>compile</project.config.swagger.scope>
-
-		<springfox.swagger.version>2.9.2</springfox.swagger.version>
 	</properties>
 
 	<scm>
@@ -48,7 +49,7 @@
 		<dependency>
 			<groupId>org.coldis.library</groupId>
 			<artifactId>service-client</artifactId>
-			<version>0.0.5</version>
+			<version>0.0.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.coldis.library</groupId>

@@ -21,7 +21,7 @@ public class JsonMapperAutoConfiguration {
 	/**
 	 * JSON type packages.
 	 */
-	@Value(value = "#{'${org.coldis.configuration.json-type-packages}'.split(',')}")
+	@Value(value = "#{'${org.coldis.configuration.base-package}'.split(',')}")
 	private String[] jsonTypePackages;
 
 	/**
