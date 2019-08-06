@@ -142,7 +142,7 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
  @param object Test object.
   */
 	public void constraintViolationExceptionService(
-			@javax.validation.Valid org.coldis.library.test.spring.exception.TestClass object) throws BusinessException {
+			org.coldis.library.test.spring.exception.TestClass object) throws BusinessException {
 		// Operation parameters.
 		StringBuilder path = new StringBuilder(this.valueResolver
 				.resolveStringValue("http://localhost:29000/exception/constraint-violation?"));

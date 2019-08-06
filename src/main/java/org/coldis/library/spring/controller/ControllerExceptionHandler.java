@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.coldis.library.exception.BusinessException;
 import org.coldis.library.exception.IntegrationException;
 import org.coldis.library.model.SimpleMessage;
@@ -71,11 +73,22 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(ConstraintViolationException.class)
 	public SimpleMessage[] processValidationError(final ConstraintViolationException exception) {
 		// Enriches the violation messages.
-		final List<SimpleMessage> violations = exception.getConstraintViolations().stream()
-				.map(violation -> this.enrichMessage(new SimpleMessage(violation.getMessageTemplate(),
-						violation.getPropertyPath() + ": " + violation.getMessage(),
-						violation.getExecutableParameters())))
-				.collect(Collectors.toList());
+		final List<SimpleMessage> violations = exception.getConstraintViolations().stream().map(violation -> {
+			// Gets the message code.
+			final String messageCode = (violation.getMessageTemplate().startsWith("{")
+					|| StringUtils.isEmpty(violation.getMessageTemplate())
+					? violation.getPropertyPath() + "."
+					+ violation.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName()
+					.toLowerCase()
+					: violation.getMessageTemplate());
+			// Gets the message.
+			final String message = violation.getPropertyPath() + ": " + violation.getMessage();
+			// Gets the message parameters.
+			final Object[] messageParameters = ArrayUtils.addAll(new Object[] { violation.getInvalidValue() },
+					violation.getExecutableParameters());
+			// Returns the enriched message.
+			return this.enrichMessage(new SimpleMessage(messageCode, message, messageParameters));
+		}).collect(Collectors.toList());
 		// Returns the messages.
 		ControllerExceptionHandler.LOGGER.error("Contraint violation exception returned. Violations: "
 				+ violations.stream().map(violation -> violation.getContent()).reduce("\n",
