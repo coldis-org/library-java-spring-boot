@@ -77,13 +77,14 @@ public class ControllerExceptionHandler {
 			// Gets the message code.
 			final String messageCode = (violation.getMessageTemplate().startsWith("{")
 					|| StringUtils.isEmpty(violation.getMessageTemplate())
-					? violation.getRootBeanClass().getSimpleName() + "." + violation.getPropertyPath() + "."
-					+ violation.getConstraintDescriptor().getAnnotation().annotationType()
-					.getSimpleName().toLowerCase()
-					: violation.getMessageTemplate());
+					? violation.getRootBeanClass().getSimpleName().toLowerCase()
+							+ "." + violation.getPropertyPath().toString().toLowerCase() + "."
+							+ violation.getConstraintDescriptor().getAnnotation().annotationType()
+							.getSimpleName().toLowerCase()
+							: violation.getMessageTemplate());
 			// Gets the message.
-			final String message = violation.getRootBeanClass().getSimpleName() + "." + violation.getPropertyPath()
-			+ ": " + violation.getMessage();
+			final String message = violation.getRootBeanClass().getSimpleName().toLowerCase() + "."
+					+ violation.getPropertyPath().toString().toLowerCase() + ": " + violation.getMessage();
 			// Gets the message parameters.
 			final Object[] messageParameters = ArrayUtils.addAll(new Object[] { violation.getInvalidValue() },
 					violation.getExecutableParameters());
