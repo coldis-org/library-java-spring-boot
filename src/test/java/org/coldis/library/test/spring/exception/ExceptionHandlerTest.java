@@ -99,13 +99,13 @@ public class ExceptionHandlerTest extends TestHelper {
 		// Makes sure the message is enhanced from the code.
 		catch (final BusinessException exception) {
 			Assertions.assertTrue(exception.getMessages().stream()
-					.anyMatch(message -> message.getCode().equals("attribute1.notnull")));
+					.anyMatch(message -> message.getCode().equals("testclass.attribute1.notnull")));
 			Assertions.assertTrue(exception.getMessages().stream()
-					.anyMatch(message -> message.getCode().equals("attribute2.notempty")));
+					.anyMatch(message -> message.getCode().equals("testclass.attribute2.notempty")));
 			Assertions.assertTrue(exception.getMessages().stream()
-					.anyMatch(message -> message.getContent().equals("attribute1: must not be null")));
+					.anyMatch(message -> message.getContent().equals("testclass.attribute1: must not be null")));
 			Assertions.assertTrue(exception.getMessages().stream()
-					.anyMatch(message -> message.getContent().equals("attribute2: must not be empty")));
+					.anyMatch(message -> message.getContent().equals("testclass.attribute2: must not be empty")));
 		}
 	}
 
