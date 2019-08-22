@@ -15,7 +15,7 @@ public class CacheControlAutoConfiguration implements WebMvcConfigurer {
 	/**
 	 * Resources not to cache.
 	 */
-	@Value(value = "#{'${spring.resources.cache.cachecontrol.ignore}'.split(',')}")
+	@Value(value = "#{'${org.coldis.library.spring.cache.ignore}'.split(',')}")
 	private String[] resourcesNotToCache;
 
 	/**
