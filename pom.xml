@@ -12,7 +12,7 @@
 
 	<groupId>org.coldis.library</groupId>
 	<artifactId>spring-boot</artifactId>
-	<version>0.0.18-SNAPSHOT</version>
+	<version>0.0.19-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Spring boot utilities</name>
@@ -31,7 +31,6 @@
 
 	<properties>
 		<project.config.source.test.compile.annotationProcessors>org.coldis.library.dto.DtoGenerator,org.coldis.library.service.client.generator.ServiceClientGenerator</project.config.source.test.compile.annotationProcessors>
-		<project.config.source.test.args>${project.config.spring.aop.args}</project.config.source.test.args>
 
 		<project.config.swagger.scope>compile</project.config.swagger.scope>
 	</properties>
