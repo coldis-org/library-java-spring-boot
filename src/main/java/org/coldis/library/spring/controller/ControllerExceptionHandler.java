@@ -55,7 +55,9 @@ public class ControllerExceptionHandler {
 		catch (final NoSuchMessageException exception) {
 			// Ignores it.
 			ControllerExceptionHandler.LOGGER
-			.debug("Message could not be enriched for code: '" + message.getCode() + "'");
+			.error("Message could not be enriched for code: '" + message.getCode() + "'.");
+			ControllerExceptionHandler.LOGGER
+			.debug("Message could not be enriched for code: '" + message.getCode() + "'.", exception);
 		}
 		// Returns the enriched message
 		message.setContent(actualMessage);
@@ -94,6 +96,9 @@ public class ControllerExceptionHandler {
 		// Returns the messages.
 		ControllerExceptionHandler.LOGGER.error("Contraint violation exception returned. Violations: "
 				+ violations.stream().map(violation -> violation.getContent()).reduce("\n",
+						(message, messages) -> messages + message + "\n"));
+		ControllerExceptionHandler.LOGGER.debug("Contraint violation exception returned. Violations: "
+				+ violations.stream().map(violation -> violation.getContent()).reduce("\n",
 						(message, messages) -> messages + message + "\n"),
 				exception);
 		return violations.toArray(new SimpleMessage[] {});
@@ -110,6 +115,7 @@ public class ControllerExceptionHandler {
 		// Enriches the exceptions messages.
 		exception.getMessages().forEach(this::enrichMessage);
 		// Returns the message with the exception status code.
+		ControllerExceptionHandler.LOGGER.error("Business exception returned: " + exception.getLocalizedMessage());
 		ControllerExceptionHandler.LOGGER.error("Business exception returned.", exception);
 		return new ResponseEntity<>(exception.getMessages().toArray(new SimpleMessage[] {}),
 				HttpStatus.valueOf(exception.getStatusCode()));
@@ -126,6 +132,7 @@ public class ControllerExceptionHandler {
 		// Enriches the exception message.
 		this.enrichMessage(exception.getInternalMessage());
 		// Returns the messages with the exception status code.
+		ControllerExceptionHandler.LOGGER.error("Integration exception returned." + exception.getLocalizedMessage());
 		ControllerExceptionHandler.LOGGER.error("Integration exception returned.", exception);
 		return new ResponseEntity<>(new SimpleMessage[] { exception.getInternalMessage() },
 				HttpStatus.valueOf(exception.getStatusCode()));
@@ -142,6 +149,7 @@ public class ControllerExceptionHandler {
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public SimpleMessage[] processOtherException(final Throwable exception) {
 		// Returns a generic message.
+		ControllerExceptionHandler.LOGGER.error("Exception returned." + exception.getLocalizedMessage());
 		ControllerExceptionHandler.LOGGER.error("Exception returned.", exception);
 		return new SimpleMessage[] { new SimpleMessage("error.unexpected", exception.getMessage()) };
 	}

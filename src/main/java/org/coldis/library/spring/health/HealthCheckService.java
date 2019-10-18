@@ -56,7 +56,8 @@ public class HealthCheckService {
 		// If the health check does not succeed.
 		catch (final Throwable throwable) {
 			// Re-throws the error.
-			HealthCheckService.LOGGER.error("Health check failed", throwable);
+			HealthCheckService.LOGGER.error("Health check failed: " + throwable.getMessage());
+			HealthCheckService.LOGGER.debug("Health check failed.", throwable);
 			throw throwable;
 		}
 		// At the end.
