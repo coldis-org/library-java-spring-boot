@@ -6,6 +6,7 @@ import org.coldis.library.persistence.keyvalue.KeyValueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -26,7 +27,7 @@ public class RepositoryHealthCheckService {
 	 *
 	 * @return The health check value.
 	 */
-	@Transactional
+	@Transactional(propagation = Propagation.REQUIRED)
 	public Long touch() {
 		Long checkValue;
 		// Gets the health check object.
