@@ -2,8 +2,6 @@ package org.coldis.library.spring.configuration;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.coldis.library.serialization.ObjectMapperHelper;
-import org.coldis.library.serialization.csv.CsvHelper;
-import org.coldis.library.spring.controller.CsvMessageConverter;
 import org.coldis.library.spring.controller.JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,13 +13,13 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 
 /**
- * CSV mapper auto configuration.
+ * JSON mapper auto configuration.
  */
 @Configuration
-public class ObjectMapperAutoConfiguration {
+@ConditionalOnClass({ ObjectMapper.class, Jackson2ObjectMapperBuilder.class })
+public class JsonMapperAutoConfiguration {
 
 	/**
 	 * JSON type packages.
@@ -38,7 +36,6 @@ public class ObjectMapperAutoConfiguration {
 	@Primary
 	@Qualifier(value = "jsonMapper")
 	@Bean(name = { "objectMapper", "jsonMapper" })
-	@ConditionalOnClass({ ObjectMapper.class, Jackson2ObjectMapperBuilder.class })
 	public ObjectMapper createJsonMapper() {
 		// Creates the object mapper.
 		ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
@@ -60,29 +57,6 @@ public class ObjectMapperAutoConfiguration {
 	@Bean(name = "jsonMessageConverter")
 	public HttpMessageConverter<?> createJsonMessageConverter() {
 		return new JsonMessageConverter(this.createJsonMapper());
-	}
-
-	/**
-	 * Creates a CSV mapper.
-	 *
-	 * @return CSV mapper.
-	 */
-	@Qualifier(value = "csvMapper")
-	@Bean(name = { "csvMapper" })
-	@ConditionalOnClass(value = CsvMapper.class)
-	public CsvMapper createCsvMapper() {
-		return CsvHelper.getObjectMapper(ArrayUtils.add(this.jsonTypePackages, DefaultAutoConfiguration.BASE_PACKAGE));
-	}
-
-	/**
-	 * Creates a CSV message converter.
-	 *
-	 * @return A CSV message converter.
-	 */
-	@Bean(name = "csvMessageConverter")
-	@ConditionalOnClass(value = CsvMapper.class)
-	public HttpMessageConverter<?> createCsvMessageConverter() {
-		return new CsvMessageConverter(this.createCsvMapper());
 	}
 
 }
