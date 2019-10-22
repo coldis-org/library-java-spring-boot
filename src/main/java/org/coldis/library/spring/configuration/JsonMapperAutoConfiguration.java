@@ -36,9 +36,9 @@ public class JsonMapperAutoConfiguration {
 	@Primary
 	@Qualifier(value = "jsonMapper")
 	@Bean(name = { "objectMapper", "jsonMapper" })
-	public ObjectMapper createJsonMapper() {
+	public ObjectMapper createJsonMapper(final Jackson2ObjectMapperBuilder builder) {
 		// Creates the object mapper.
-		ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+		ObjectMapper objectMapper = builder.build();
 		// Registers the date/time module.
 		objectMapper.registerModule(ObjectMapperHelper.getDateTimeModule());
 		// Registers the subtypes from the base packages.
@@ -51,12 +51,13 @@ public class JsonMapperAutoConfiguration {
 	/**
 	 * Creates a JSON message converter.
 	 *
-	 * @return A JSON message converter.
+	 * @param  builder Builder.
+	 * @return         A JSON message converter.
 	 */
 	@Primary
 	@Bean(name = "jsonMessageConverter")
-	public HttpMessageConverter<?> createJsonMessageConverter() {
-		return new JsonMessageConverter(this.createJsonMapper());
+	public HttpMessageConverter<?> createJsonMessageConverter(final Jackson2ObjectMapperBuilder builder) {
+		return new JsonMessageConverter(this.createJsonMapper(builder));
 	}
 
 }
