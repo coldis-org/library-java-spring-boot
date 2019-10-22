@@ -69,6 +69,7 @@ public class ObjectMapperAutoConfiguration {
 	 */
 	@Qualifier(value = "csvMapper")
 	@Bean(name = { "csvMapper" })
+	@ConditionalOnClass(value = CsvMapper.class)
 	public CsvMapper createCsvMapper() {
 		return CsvHelper.getObjectMapper(ArrayUtils.add(this.jsonTypePackages, DefaultAutoConfiguration.BASE_PACKAGE));
 	}
@@ -79,6 +80,7 @@ public class ObjectMapperAutoConfiguration {
 	 * @return A CSV message converter.
 	 */
 	@Bean(name = "csvMessageConverter")
+	@ConditionalOnClass(value = CsvMapper.class)
 	public HttpMessageConverter<?> createCsvMessageConverter() {
 		return new CsvMessageConverter(this.createCsvMapper());
 	}
