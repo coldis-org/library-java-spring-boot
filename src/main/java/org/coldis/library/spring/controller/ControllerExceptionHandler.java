@@ -116,7 +116,7 @@ public class ControllerExceptionHandler {
 		exception.getMessages().forEach(this::enrichMessage);
 		// Returns the message with the exception status code.
 		ControllerExceptionHandler.LOGGER.error("Business exception returned: " + exception.getLocalizedMessage());
-		ControllerExceptionHandler.LOGGER.error("Business exception returned.", exception);
+		ControllerExceptionHandler.LOGGER.debug("Business exception returned.", exception);
 		return new ResponseEntity<>(exception.getMessages().toArray(new SimpleMessage[] {}),
 				HttpStatus.valueOf(exception.getStatusCode()));
 	}
@@ -133,7 +133,7 @@ public class ControllerExceptionHandler {
 		this.enrichMessage(exception.getInternalMessage());
 		// Returns the messages with the exception status code.
 		ControllerExceptionHandler.LOGGER.error("Integration exception returned." + exception.getLocalizedMessage());
-		ControllerExceptionHandler.LOGGER.error("Integration exception returned.", exception);
+		ControllerExceptionHandler.LOGGER.debug("Integration exception returned.", exception);
 		return new ResponseEntity<>(new SimpleMessage[] { exception.getInternalMessage() },
 				HttpStatus.valueOf(exception.getStatusCode()));
 	}
@@ -150,7 +150,7 @@ public class ControllerExceptionHandler {
 	public SimpleMessage[] processOtherException(final Throwable exception) {
 		// Returns a generic message.
 		ControllerExceptionHandler.LOGGER.error("Exception returned." + exception.getLocalizedMessage());
-		ControllerExceptionHandler.LOGGER.error("Exception returned.", exception);
+		ControllerExceptionHandler.LOGGER.debug("Exception returned.", exception);
 		return new SimpleMessage[] { new SimpleMessage("error.unexpected", exception.getMessage()) };
 	}
 

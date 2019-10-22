@@ -3,6 +3,7 @@ package org.coldis.library.test.spring.health;
 import org.coldis.library.exception.BusinessException;
 import org.coldis.library.exception.IntegrationException;
 import org.coldis.library.service.client.GenericRestServiceClient;
+import org.coldis.library.spring.health.HealthCheckValue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -17,7 +18,7 @@ public class HealthCheckServiceClient extends GenericRestServiceClient {
 	/**
 	 * Service endpoint.
 	 */
-	@Value("localhost://${server.port}")
+	@Value("http://localhost:9090")
 	private String endpoint;
 
 	/**
@@ -35,15 +36,15 @@ public class HealthCheckServiceClient extends GenericRestServiceClient {
 	/**
 	 * Health check service.
 	 *
-	 * @return                      The check entity id.
+	 * @return                      The check value.
 	 * @throws IntegrationException If the service call did not end successfully
 	 *                                  (other than bad request).
 	 * @throws BusinessException    If the service call did not end successfully
 	 *                                  (bad request).
 	 */
-	public Integer check() throws IntegrationException, BusinessException {
+	public HealthCheckValue check() throws IntegrationException, BusinessException {
 		return this.executeOperation(this.endpoint + this.context, HttpMethod.GET, null, null, null,
-				new ParameterizedTypeReference<Integer>() {
+				new ParameterizedTypeReference<HealthCheckValue>() {
 		}).getBody();
 	}
 }

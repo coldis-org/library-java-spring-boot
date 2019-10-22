@@ -1,7 +1,7 @@
 package org.coldis.library.test.spring.health;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -25,6 +25,6 @@ public class HealthCheckServiceTest {
 	 */
 	@Test
 	public void testCheck() throws Exception {
-		Assert.assertEquals(1, this.checkEntityServiceClient.check().intValue());
+		Assertions.assertEquals(1, this.checkEntityServiceClient.check().getValue().intValue());
 	}
 }

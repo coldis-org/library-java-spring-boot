@@ -6,7 +6,6 @@ import org.coldis.library.persistence.keyvalue.KeyValueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -27,9 +26,9 @@ public class RepositoryHealthCheckService {
 	 *
 	 * @return The health check value.
 	 */
-	@Transactional(propagation = Propagation.REQUIRED)
-	public Long touch() {
-		Long checkValue;
+	@Transactional
+	public HealthCheckValue touch() {
+		HealthCheckValue checkValue;
 		// Gets the health check object.
 		KeyValue<HealthCheckValue> healthCheck = this.healthCheckRepository
 				.findById(HealthCheckService.HEALTH_CHECK_KEY).orElse(null);
@@ -40,7 +39,7 @@ public class RepositoryHealthCheckService {
 		}
 		// Saves the health check again.
 		healthCheck.setUpdatedAt(DateTimeHelper.getCurrentLocalDateTime());
-		checkValue = this.healthCheckRepository.save(healthCheck).getValue().getValue();
+		checkValue = this.healthCheckRepository.save(healthCheck).getValue();
 		return checkValue;
 	}
 

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.coldis.library.exception.BusinessException;
 import org.coldis.library.exception.IntegrationException;
 import org.coldis.library.service.client.GenericRestServiceClient;
@@ -78,7 +79,7 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 			java.lang.Object[] parameters) throws BusinessException {
 		// Operation parameters.
 		StringBuilder path = new StringBuilder(this.valueResolver
-				.resolveStringValue("http://localhost:29000/exception/business?"));
+				.resolveStringValue("http://localhost:9090/exception/business?"));
 		final HttpMethod method = HttpMethod.POST;
 		final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 		Object body = null;
@@ -89,12 +90,58 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 		// Adds the content type headers.
 		GenericRestServiceClient.addContentTypeHeaders(headers,
 				MediaType.APPLICATION_JSON_UTF8_VALUE);
-		// Adds the URI parameter to the map.
-		uriParameters.put("code", code);
-		path.append("code={code}&");
-		// Adds the URI parameter to the map.
-		uriParameters.put("parameters", parameters);
-		path.append("parameters={parameters}&");
+		// If the parameter is an array.
+		if (code != null && code.getClass().isArray()) {
+			// For each item.
+			java.util.List codes = java.util.Arrays.asList(code);
+			for (Integer parameterItemIndex = 0; parameterItemIndex < codes.size(); parameterItemIndex++) {
+				// Adds the URI parameter to the map.
+				uriParameters.put("code" + parameterItemIndex, codes.get(parameterItemIndex));
+				path.append("code={code" + parameterItemIndex + "}&");
+			}
+		}
+		// If the parameter is a collection.
+		else if (code != null && java.lang.Iterable.class.isAssignableFrom(code.getClass())) {
+			// For each item.
+			java.util.Iterator codes = ((java.lang.Iterable)(java.lang.Object) code).iterator();
+			for (Integer parameterItemIndex = 0; codes.hasNext(); parameterItemIndex++) {
+				// Adds the URI parameter to the map.
+				uriParameters.put("code" + parameterItemIndex, codes.next());
+				path.append("code={code" + parameterItemIndex + "}&");
+			}
+		}
+		// If the parameter is not a collection nor an array.
+		else {
+			// Adds the URI parameter to the map.
+			uriParameters.put("code", code);
+			path.append("code={code}&");
+		}
+		// If the parameter is an array.
+		if (parameters != null && parameters.getClass().isArray()) {
+			// For each item.
+			java.util.List parameterss = java.util.Arrays.asList(parameters);
+			for (Integer parameterItemIndex = 0; parameterItemIndex < parameterss.size(); parameterItemIndex++) {
+				// Adds the URI parameter to the map.
+				uriParameters.put("parameters" + parameterItemIndex, parameterss.get(parameterItemIndex));
+				path.append("parameters={parameters" + parameterItemIndex + "}&");
+			}
+		}
+		// If the parameter is a collection.
+		else if (parameters != null && java.lang.Iterable.class.isAssignableFrom(parameters.getClass())) {
+			// For each item.
+			java.util.Iterator parameterss = ((java.lang.Iterable)(java.lang.Object) parameters).iterator();
+			for (Integer parameterItemIndex = 0; parameterss.hasNext(); parameterItemIndex++) {
+				// Adds the URI parameter to the map.
+				uriParameters.put("parameters" + parameterItemIndex, parameterss.next());
+				path.append("parameters={parameters" + parameterItemIndex + "}&");
+			}
+		}
+		// If the parameter is not a collection nor an array.
+		else {
+			// Adds the URI parameter to the map.
+			uriParameters.put("parameters", parameters);
+			path.append("parameters={parameters}&");
+		}
 		// Executes the operation and returns the response.
 		this.serviceClient.executeOperation(path.toString(), method, headers,
 				partParameters.isEmpty() ? body : partParameters,
@@ -113,7 +160,7 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 			java.lang.Object[] parameters) throws BusinessException {
 		// Operation parameters.
 		StringBuilder path = new StringBuilder(this.valueResolver
-				.resolveStringValue("http://localhost:29000/exception/integration?"));
+				.resolveStringValue("http://localhost:9090/exception/integration?"));
 		final HttpMethod method = HttpMethod.POST;
 		final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 		Object body = null;
@@ -124,12 +171,58 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 		// Adds the content type headers.
 		GenericRestServiceClient.addContentTypeHeaders(headers,
 				MediaType.APPLICATION_JSON_UTF8_VALUE);
-		// Adds the URI parameter to the map.
-		uriParameters.put("code", code);
-		path.append("code={code}&");
-		// Adds the URI parameter to the map.
-		uriParameters.put("parameters", parameters);
-		path.append("parameters={parameters}&");
+		// If the parameter is an array.
+		if (code != null && code.getClass().isArray()) {
+			// For each item.
+			java.util.List codes = java.util.Arrays.asList(code);
+			for (Integer parameterItemIndex = 0; parameterItemIndex < codes.size(); parameterItemIndex++) {
+				// Adds the URI parameter to the map.
+				uriParameters.put("code" + parameterItemIndex, codes.get(parameterItemIndex));
+				path.append("code={code" + parameterItemIndex + "}&");
+			}
+		}
+		// If the parameter is a collection.
+		else if (code != null && java.lang.Iterable.class.isAssignableFrom(code.getClass())) {
+			// For each item.
+			java.util.Iterator codes = ((java.lang.Iterable)(java.lang.Object) code).iterator();
+			for (Integer parameterItemIndex = 0; codes.hasNext(); parameterItemIndex++) {
+				// Adds the URI parameter to the map.
+				uriParameters.put("code" + parameterItemIndex, codes.next());
+				path.append("code={code" + parameterItemIndex + "}&");
+			}
+		}
+		// If the parameter is not a collection nor an array.
+		else {
+			// Adds the URI parameter to the map.
+			uriParameters.put("code", code);
+			path.append("code={code}&");
+		}
+		// If the parameter is an array.
+		if (parameters != null && parameters.getClass().isArray()) {
+			// For each item.
+			java.util.List parameterss = java.util.Arrays.asList(parameters);
+			for (Integer parameterItemIndex = 0; parameterItemIndex < parameterss.size(); parameterItemIndex++) {
+				// Adds the URI parameter to the map.
+				uriParameters.put("parameters" + parameterItemIndex, parameterss.get(parameterItemIndex));
+				path.append("parameters={parameters" + parameterItemIndex + "}&");
+			}
+		}
+		// If the parameter is a collection.
+		else if (parameters != null && java.lang.Iterable.class.isAssignableFrom(parameters.getClass())) {
+			// For each item.
+			java.util.Iterator parameterss = ((java.lang.Iterable)(java.lang.Object) parameters).iterator();
+			for (Integer parameterItemIndex = 0; parameterss.hasNext(); parameterItemIndex++) {
+				// Adds the URI parameter to the map.
+				uriParameters.put("parameters" + parameterItemIndex, parameterss.next());
+				path.append("parameters={parameters" + parameterItemIndex + "}&");
+			}
+		}
+		// If the parameter is not a collection nor an array.
+		else {
+			// Adds the URI parameter to the map.
+			uriParameters.put("parameters", parameters);
+			path.append("parameters={parameters}&");
+		}
 		// Executes the operation and returns the response.
 		this.serviceClient.executeOperation(path.toString(), method, headers,
 				partParameters.isEmpty() ? body : partParameters,
@@ -145,7 +238,7 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 			org.coldis.library.test.spring.exception.TestClass object) throws BusinessException {
 		// Operation parameters.
 		StringBuilder path = new StringBuilder(this.valueResolver
-				.resolveStringValue("http://localhost:29000/exception/constraint-violation?"));
+				.resolveStringValue("http://localhost:9090/exception/constraint-violation?"));
 		final HttpMethod method = HttpMethod.POST;
 		final MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 		Object body = null;

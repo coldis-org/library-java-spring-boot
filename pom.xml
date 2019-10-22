@@ -28,8 +28,6 @@
 	</developers>
 
 	<properties>
-		<project.config.source.main.aspect.phase>none</project.config.source.main.aspect.phase>
-		<project.config.source.test.aspect.phase>none</project.config.source.test.aspect.phase>
 		<project.config.source.test.compile.annotationProcessors>org.coldis.library.dto.DtoGenerator,org.coldis.library.service.client.generator.ServiceClientGenerator</project.config.source.test.compile.annotationProcessors>
 		<project.config.swagger.scope>compile</project.config.swagger.scope>
 	</properties>
@@ -51,7 +49,7 @@
 		<dependency>
 			<groupId>org.coldis.library</groupId>
 			<artifactId>persistence</artifactId>
-			<version>0.0.15</version>
+			<version>0.0.16</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>

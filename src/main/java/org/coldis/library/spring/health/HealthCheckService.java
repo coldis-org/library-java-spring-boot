@@ -39,12 +39,12 @@ public class HealthCheckService {
 	 * @return The health check value.
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public Long check() {
+	public HealthCheckValue check() {
 		HealthCheckService.LOGGER.debug("Health check starting.");
 		final long initMillis = System.currentTimeMillis();
 		try {
 			// The health check default value.
-			Long checkValue = HealthCheckValue.VALUE;
+			HealthCheckValue checkValue = new HealthCheckValue();
 			// If the repository is available.
 			if (this.repositoryHealthCheckService != null) {
 				// Touches the repository.

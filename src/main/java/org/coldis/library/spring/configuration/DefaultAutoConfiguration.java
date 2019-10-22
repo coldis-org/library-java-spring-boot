@@ -25,11 +25,10 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 @PropertySource(
 		value = { DefaultAutoConfiguration.DEFAULT_PROPERTIES, DefaultAutoConfiguration.INTEGRATION_PROPERTIES },
 		ignoreResourceNotFound = true)
-@AutoConfigureBefore(value = { AspectJAutoConfiguration.class, CsvMapperAutoConfiguration.class,
-				DateTimeFormatterAutoConfiguration.class, JmsAutoConfiguration.class, JsonMapperAutoConfiguration.class,
-				ValidatorAutoConfiguration.class, ControllerExceptionHandler.class, DataInstaller.class,
-				AopTransactionManagementAutoConfiguration.class, ProxyTransactionManagementAutoConfiguration.class,
-				JpaAutoConfiguration.class })
+@AutoConfigureBefore(value = { AspectJAutoConfiguration.class, ObjectMapperAutoConfiguration.class,
+				DateTimeFormatterAutoConfiguration.class, JmsAutoConfiguration.class, ValidatorAutoConfiguration.class,
+				ControllerExceptionHandler.class, DataInstaller.class, AopTransactionManagementAutoConfiguration.class,
+				ProxyTransactionManagementAutoConfiguration.class, JpaAutoConfiguration.class })
 public class DefaultAutoConfiguration {
 
 	/**

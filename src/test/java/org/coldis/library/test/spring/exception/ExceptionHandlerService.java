@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(path = "exception")
 @ServiceClient(namespace = "org.coldis.library.test.spring.exception", targetPath = "src/test/java",
-endpoint = "http://localhost:29000" + "/exception")
+endpoint = "http://localhost:9090/exception")
 public class ExceptionHandlerService {
 
 	/**

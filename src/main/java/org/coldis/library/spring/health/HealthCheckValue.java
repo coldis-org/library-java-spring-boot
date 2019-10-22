@@ -28,6 +28,21 @@ public class HealthCheckValue implements TypedObject {
 	public static final Long VALUE = 1L;
 
 	/**
+	 * Health.
+	 */
+	private static final String HEALTH = "healthy";
+
+	/**
+	 * Gets the health.
+	 *
+	 * @return The health.
+	 */
+	@JsonView({ ModelView.Persistent.class, ModelView.Public.class })
+	public String getHealth() {
+		return HealthCheckValue.HEALTH;
+	}
+
+	/**
 	 * Gets the value.
 	 *
 	 * @return The value.

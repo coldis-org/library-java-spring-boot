@@ -2,6 +2,7 @@ package org.coldis.library.test.spring.installer;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +56,7 @@ public class TestService {
 	 * @param property2  Test property 2.
 	 * @param testEntity Entity data.
 	 */
+	@Transactional
 	@RequestMapping(method = { RequestMethod.PUT }, path = { "{property1}/{property2}" })
 	public void update(@PathVariable final Integer property1, @PathVariable final Integer property2,
 			@RequestBody final TestEntity testEntity) {
@@ -73,6 +75,7 @@ public class TestService {
 	 *
 	 * @param testEntity Test entity.
 	 */
+	@Transactional
 	@RequestMapping(method = { RequestMethod.POST })
 	public void create(@RequestBody final TestEntity testEntity) {
 		this.testRepository.save(testEntity);
