@@ -2,15 +2,14 @@ package org.coldis.library.spring.configuration;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.coldis.library.serialization.ObjectMapperHelper;
-import org.coldis.library.spring.controller.JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -55,9 +54,9 @@ public class JsonMapperAutoConfiguration {
 	 * @return         A JSON message converter.
 	 */
 	@Primary
-	@Bean(name = "jsonMessageConverter")
-	public HttpMessageConverter<?> createJsonMessageConverter(final Jackson2ObjectMapperBuilder builder) {
-		return new JsonMessageConverter(this.createJsonMapper(builder));
+	@Bean(name = "mappingJackson2HttpMessageConverter")
+	public MappingJackson2HttpMessageConverter createJsonMessageConverter(final Jackson2ObjectMapperBuilder builder) {
+		return new MappingJackson2HttpMessageConverter(this.createJsonMapper(builder));
 	}
 
 }
