@@ -2,9 +2,6 @@ package org.coldis.library.spring.configuration;
 
 import java.util.Locale;
 
-import org.coldis.library.persistence.configuration.AopTransactionManagementAutoConfiguration;
-import org.coldis.library.persistence.configuration.JpaAutoConfiguration;
-import org.coldis.library.persistence.configuration.ProxyTransactionManagementAutoConfiguration;
 import org.coldis.library.spring.controller.ControllerExceptionHandler;
 import org.coldis.library.spring.installer.DataInstaller;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -27,9 +24,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 		ignoreResourceNotFound = true)
 @AutoConfigureBefore(value = { AspectJAutoConfiguration.class, JsonMapperAutoConfiguration.class,
 				CsvMapperAutoConfiguration.class, DateTimeFormatterAutoConfiguration.class, JmsAutoConfiguration.class,
-				ValidatorAutoConfiguration.class, ControllerExceptionHandler.class, DataInstaller.class,
-				AopTransactionManagementAutoConfiguration.class, ProxyTransactionManagementAutoConfiguration.class,
-				JpaAutoConfiguration.class })
+				ValidatorAutoConfiguration.class, ControllerExceptionHandler.class, DataInstaller.class })
 public class DefaultAutoConfiguration {
 
 	/**
