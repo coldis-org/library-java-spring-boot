@@ -31,8 +31,8 @@ public class ValidatorAutoConfiguration {
 	 */
 	@Primary
 	@Bean(name = "extendedValidator")
-	public ExtendedValidator createExtendedValidator() {
-		return new ExtendedValidator(this.createInternalValidator());
+	public ExtendedValidator createExtendedValidator(final Validator validator) {
+		return new ExtendedValidator(validator);
 	}
 
 }

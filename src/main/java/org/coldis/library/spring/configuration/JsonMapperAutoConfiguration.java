@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -47,16 +46,5 @@ public class JsonMapperAutoConfiguration {
 		return objectMapper;
 	}
 
-	/**
-	 * Creates a JSON message converter.
-	 *
-	 * @param  builder Builder.
-	 * @return         A JSON message converter.
-	 */
-	@Primary
-	@Bean(name = "mappingJackson2HttpMessageConverter")
-	public MappingJackson2HttpMessageConverter createJsonMessageConverter(final Jackson2ObjectMapperBuilder builder) {
-		return new MappingJackson2HttpMessageConverter(this.createJsonMapper(builder));
-	}
 
 }

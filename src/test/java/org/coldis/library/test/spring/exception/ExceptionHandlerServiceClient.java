@@ -43,7 +43,7 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 	 * JMS template.
 	 */
 	@Autowired(required = false)
-	private JmsTemplate jmsTemplate;
+		private JmsTemplate jmsTemplate;
 	
 	/**
 	 * Service client.
@@ -146,6 +146,7 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 		this.serviceClient.executeOperation(path.toString(), method, headers,
 				partParameters.isEmpty() ? body : partParameters,
 				uriParameters, returnType);
+				
 	}
 	
 	/**
@@ -227,6 +228,7 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 		this.serviceClient.executeOperation(path.toString(), method, headers,
 				partParameters.isEmpty() ? body : partParameters,
 				uriParameters, returnType);
+				
 	}
 	
 	/**
@@ -255,6 +257,7 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 		this.serviceClient.executeOperation(path.toString(), method, headers,
 				partParameters.isEmpty() ? body : partParameters,
 				uriParameters, returnType);
+				
 	}
 	
 

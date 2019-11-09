@@ -10,7 +10,8 @@ import org.springframework.context.annotation.EnableLoadTimeWeaving.AspectJWeavi
  */
 @Configuration
 @EnableLoadTimeWeaving(aspectjWeaving = AspectJWeaving.ENABLED)
-@ConditionalOnProperty(name = "org.coldis.configuration.aspectj-ltw-enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(name = "org.coldis.configuration.aspectj-ltw-enabled", havingValue = "true",
+matchIfMissing = false)
 public class AspectJAutoConfiguration {
 
 }
