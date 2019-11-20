@@ -63,6 +63,34 @@ public class DtoTestObject implements TypedObject, IdentifiedObject {
 	private Integer test9;
 
 	/**
+	 * Empty constructor.
+	 */
+	public DtoTestObject() {
+		super();
+	}
+
+	/**
+	 * Default constructor.
+	 *
+	 * @param id    Test property.
+	 * @param test3 Test property.
+	 * @param test5 Test property.
+	 * @param test7 Test property.
+	 * @param test8 Test property.
+	 * @param test9 Test property.
+	 */
+	public DtoTestObject(final Long id, final String test3, final String test5, final int test7, final int[] test8,
+			final Integer test9) {
+		super();
+		this.id = id;
+		this.test3 = test3;
+		this.test5 = test5;
+		this.test7 = test7;
+		this.test8 = test8;
+		this.test9 = test9;
+	}
+
+	/**
 	 * @see org.coldis.library.model.IdentifiedObject#getId()
 	 */
 	@Override

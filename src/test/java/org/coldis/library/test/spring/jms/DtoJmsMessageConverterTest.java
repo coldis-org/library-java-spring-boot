@@ -19,21 +19,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * JMS message converter test.
  */
 @EnableJms
-@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
-public class JmsMessageConverterTest {
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT,
+properties = { "org.coldis.configuration.jms-message-converter-default-enabled=false",
+"org.coldis.configuration.jms-message-converter-dto-enabled=true" })
+public class DtoJmsMessageConverterTest {
 
 	/**
 	 * Test data.
 	 */
-	private static final List<DtoTestObjectDto> TEST_DATA = List.of(
-			new DtoTestObjectDto().withId(1L).withTest7(4).withTest88(new int[] { 1, 2 }).withTest9(46),
-			new DtoTestObjectDto().withId(2L).withTest7(5).withTest88(new int[] { 3, 4 }).withTest9(423),
-			new DtoTestObjectDto().withId(3L).withTest7(6).withTest88(new int[] { 5, 6 }).withTest9(2342));
+	private static final List<DtoTestObject> TEST_DATA = List.of(
+			new DtoTestObject(1L, "2", "3", 4, new int[] { 5, 6 }, 7),
+			new DtoTestObject(2L, "3", "5", 5, new int[] { 6, 7 }, 8),
+			new DtoTestObject(3L, "4", "5", 6, new int[] { 7, 8 }, 9));
 
 	/**
 	 * Current test message.
 	 */
-	private static DtoTestObject currentTestMessage;
+	private static DtoTestObjectDto currentTestMessage;
 
 	/**
 	 * Object mapper.
@@ -52,8 +54,8 @@ public class JmsMessageConverterTest {
 	 *
 	 * @return The currentTestMessage.
 	 */
-	private DtoTestObject getCurrentTestMessage() {
-		return JmsMessageConverterTest.currentTestMessage;
+	private DtoTestObjectDto getCurrentTestMessage() {
+		return DtoJmsMessageConverterTest.currentTestMessage;
 	}
 
 	/**
@@ -62,8 +64,8 @@ public class JmsMessageConverterTest {
 	 * @param message Message.
 	 */
 	@JmsListener(destination = "jmsTest")
-	public void consumeMessage(final DtoTestObject message) {
-		JmsMessageConverterTest.currentTestMessage = message;
+	public void consumeMessage(final DtoTestObjectDto message) {
+		DtoJmsMessageConverterTest.currentTestMessage = message;
 	}
 
 	/**
@@ -72,15 +74,15 @@ public class JmsMessageConverterTest {
 	 * @throws Exception If the test fails.
 	 */
 	@Test
-	public void testJsonMessageConverter() throws Exception {
+	public void testMessageConverter() throws Exception {
 		// For each test data.
-		for (final DtoTestObjectDto testData : JmsMessageConverterTest.TEST_DATA) {
+		for (final DtoTestObject testData : DtoJmsMessageConverterTest.TEST_DATA) {
 			// Sends the test data as a JMS message.
 			this.jmsTemplate.convertAndSend("jmsTest", testData);
 			// Asserts that the message is correctly converted.
 			Assertions.assertTrue(TestHelper.waitUntilValid(this::getCurrentTestMessage,
-					message -> testData.equals(
-							ObjectMapperHelper.convert(this.objectMapper, message, DtoTestObjectDto.class, true)),
+					message -> (message != null) && message.equals(
+							ObjectMapperHelper.convert(this.objectMapper, testData, DtoTestObjectDto.class, true)),
 					TestHelper.LONG_WAIT, TestHelper.SHORT_WAIT));
 		}
 

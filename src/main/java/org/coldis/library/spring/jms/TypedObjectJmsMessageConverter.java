@@ -11,7 +11,9 @@ import org.coldis.library.serialization.ObjectMapperHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.jms.support.converter.MessageConversionException;
 import org.springframework.jms.support.converter.SimpleMessageConverter;
 import org.springframework.stereotype.Component;
@@ -19,17 +21,19 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * JSON JMS message converter.
+ * Typed object JMS message converter.
  */
 @Component
+@Qualifier("typedJmsMessageConverter")
 @ConditionalOnClass(value = Message.class)
-//@ConditionalOnBean(value = JmsTemplate.class)
-public class JsonJmsMessageConverter extends SimpleMessageConverter {
+@ConditionalOnProperty(name = "org.coldis.configuration.jms-message-converter-typed-enabled", havingValue = "true",
+matchIfMissing = false)
+public class TypedObjectJmsMessageConverter extends SimpleMessageConverter {
 
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(JsonJmsMessageConverter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TypedObjectJmsMessageConverter.class);
 
 	/**
 	 * Object mapper.
@@ -54,9 +58,9 @@ public class JsonJmsMessageConverter extends SimpleMessageConverter {
 			// If the object cannot be converted from JSON.
 			catch (final Exception exception) {
 				// Logs it.
-				JsonJmsMessageConverter.LOGGER.error("Object could not be converted from JSON: ",
+				TypedObjectJmsMessageConverter.LOGGER.error("Object could not be converted from JSON: ",
 						exception.getLocalizedMessage());
-				JsonJmsMessageConverter.LOGGER.debug("Object could not be converted from JSON.", exception);
+				TypedObjectJmsMessageConverter.LOGGER.debug("Object could not be converted from JSON.", exception);
 			}
 		}
 		// If the object could not be converted from JSON.
@@ -87,9 +91,9 @@ public class JsonJmsMessageConverter extends SimpleMessageConverter {
 			// If the object cannot be converted from JSON.
 			catch (final Exception exception) {
 				// Logs it.
-				JsonJmsMessageConverter.LOGGER.error("Object could not be serialized to JSON: ",
+				TypedObjectJmsMessageConverter.LOGGER.error("Object could not be serialized to JSON: ",
 						exception.getLocalizedMessage());
-				JsonJmsMessageConverter.LOGGER.debug("Object could not be serialized to JSON.", exception);
+				TypedObjectJmsMessageConverter.LOGGER.debug("Object could not be serialized to JSON.", exception);
 			}
 		}
 		// Returns the message.
