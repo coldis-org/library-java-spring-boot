@@ -2,7 +2,11 @@ package org.coldis.library.spring.configuration;
 
 import java.util.Locale;
 
+import org.coldis.library.spring.controller.ControllerExceptionHandler;
+import org.coldis.library.spring.installer.DataInstaller;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.jms.JmsAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -19,6 +23,9 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 @PropertySource(
 		value = { DefaultAutoConfiguration.DEFAULT_PROPERTIES, DefaultAutoConfiguration.INTEGRATION_PROPERTIES },
 		ignoreResourceNotFound = true)
+@AutoConfigureBefore(value = { AspectJAutoConfiguration.class, JsonMapperAutoConfiguration.class,
+				CsvMapperAutoConfiguration.class, DateTimeFormatterAutoConfiguration.class, JmsAutoConfiguration.class,
+				ValidatorAutoConfiguration.class, ControllerExceptionHandler.class, DataInstaller.class })
 public class DefaultAutoConfiguration {
 
 	/**
