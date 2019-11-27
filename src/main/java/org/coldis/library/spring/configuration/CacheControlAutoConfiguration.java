@@ -32,7 +32,7 @@ public class CacheControlAutoConfiguration implements WebMvcConfigurer {
 	@Override
 	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
 		registry.addResourceHandler(this.resourcesNotToCache)
-		.addResourceLocations(this.resourceProperties.getStaticLocations()).setCachePeriod(0)
-		.setCacheControl(CacheControl.noStore());
+		.addResourceLocations(this.resourceProperties.getStaticLocations())
+		.setCacheControl(CacheControl.noStore().mustRevalidate()).setCachePeriod(0);
 	}
 }
