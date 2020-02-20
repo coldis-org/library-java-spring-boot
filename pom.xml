@@ -44,12 +44,12 @@
 		<dependency>
 			<groupId>org.coldis.library</groupId>
 			<artifactId>service-client</artifactId>
-			<version>0.0.17</version>
+			<version>0.0.18</version>
 		</dependency>
 		<dependency>
 			<groupId>org.coldis.library</groupId>
 			<artifactId>persistence</artifactId>
-			<version>0.0.21</version>
+			<version>0.0.22</version>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
