@@ -2,12 +2,12 @@ package org.coldis.library.spring.servlet;
 
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+
+import org.apache.commons.collections4.MultiValuedMap;
+import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 
 /**
  * Modifiable headers HTTP Servlet request wrapper.
@@ -27,16 +27,41 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	/**
 	 * Headers.
 	 */
-	private final Map<String, String> headers = new HashMap<>();
+	private MultiValuedMap<String, String> headers;
 
 	/**
-	 * Adds a header to the request.
+	 * Gets the headers.
 	 *
-	 * @param name  Header name.
-	 * @param value Header value.
+	 * @return The headers.
 	 */
-	public void addHeader(final String name, final String value) {
-		this.headers.put(name, value);
+	public MultiValuedMap<String, String> getHeaders() {
+		// If the map has not been initialized.
+		if (this.headers == null) {
+			// Initializes the headers.
+			this.headers = new ArrayListValuedHashMap<>();
+			// For each header.
+			while (this.getHeaderNames().hasMoreElements()) {
+				final String headerName = this.getHeaderNames().nextElement();
+				// For each header with the name.
+				final Enumeration<String> headersForName = this.getHeaders(headerName);
+				while (headersForName.hasMoreElements()) {
+					final String headerValue = headersForName.nextElement();
+					// Adds the header to the map.
+					this.headers.put(headerName, headerValue);
+				}
+			}
+		}
+		// Returns the headers.
+		return this.headers;
+	}
+
+	/**
+	 * Sets the headers.
+	 *
+	 * @param headers New headers.
+	 */
+	public void setHeaders(final MultiValuedMap<String, String> headers) {
+		this.headers = headers;
 	}
 
 	/**
@@ -44,11 +69,7 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 */
 	@Override
 	public String getHeader(final String name) {
-		String headerValue = super.getHeader(name);
-		if (this.headers.containsKey(name)) {
-			headerValue = this.headers.get(name);
-		}
-		return headerValue;
+		return this.getHeaders().get(name).stream().findAny().orElse(null);
 	}
 
 	/**
@@ -56,11 +77,7 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 */
 	@Override
 	public Enumeration<String> getHeaderNames() {
-		final List<String> names = Collections.list(super.getHeaderNames());
-		for (final String name : this.headers.keySet()) {
-			names.add(name);
-		}
-		return Collections.enumeration(names);
+		return Collections.enumeration(this.getHeaders().asMap().keySet());
 	}
 
 	/**
@@ -68,11 +85,7 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 */
 	@Override
 	public Enumeration<String> getHeaders(final String name) {
-		final List<String> values = Collections.list(super.getHeaders(name));
-		if (this.headers.containsKey(name)) {
-			values.add(this.headers.get(name));
-		}
-		return Collections.enumeration(values);
+		return Collections.enumeration(this.getHeaders().get(name));
 	}
 
 }
