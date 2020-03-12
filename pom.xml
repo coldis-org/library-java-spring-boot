@@ -10,7 +10,7 @@
 
 	<groupId>org.coldis.library</groupId>
 	<artifactId>spring-boot</artifactId>
-	<version>0.0.52-SNAPSHOT</version>
+	<version>0.0.51-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Spring boot utilities</name>
