@@ -46,7 +46,7 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 			// For each header.
 			final Enumeration<String> headerNames = super.getHeaderNames();
 			while (headerNames.hasMoreElements()) {
-				final String headerName = super.getHeaderNames().nextElement();
+				final String headerName = headerNames.nextElement();
 				// For each header with the name.
 				final Enumeration<String> headersValues = super.getHeaders(headerName);
 				while (headersValues.hasMoreElements()) {
