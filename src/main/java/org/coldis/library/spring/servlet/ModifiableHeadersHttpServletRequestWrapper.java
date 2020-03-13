@@ -34,7 +34,7 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 *
 	 * @return The headers.
 	 */
-	public MultiValuedMap<String, String> getHeaders() {
+	private MultiValuedMap<String, String> getHeaders() {
 		// If the map has not been initialized.
 		if (this.headers == null) {
 			// Initializes the headers.
@@ -47,7 +47,7 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 				while (headersForName.hasMoreElements()) {
 					final String headerValue = headersForName.nextElement();
 					// Adds the header to the map.
-					this.headers.put(headerName, headerValue);
+					this.headers.put(headerName.toLowerCase(), headerValue);
 				}
 			}
 		}
@@ -56,20 +56,11 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	}
 
 	/**
-	 * Sets the headers.
-	 *
-	 * @param headers New headers.
-	 */
-	public void setHeaders(final MultiValuedMap<String, String> headers) {
-		this.headers = headers;
-	}
-
-	/**
 	 * @see javax.servlet.http.HttpServletRequestWrapper#getHeader(java.lang.String)
 	 */
 	@Override
 	public String getHeader(final String name) {
-		return this.getHeaders().get(name).stream().findAny().orElse(null);
+		return this.getHeaders().get(name.toLowerCase()).stream().findAny().orElse(null);
 	}
 
 	/**
@@ -85,7 +76,26 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 */
 	@Override
 	public Enumeration<String> getHeaders(final String name) {
-		return Collections.enumeration(this.getHeaders().get(name));
+		return Collections.enumeration(this.getHeaders().get(name.toLowerCase()));
+	}
+
+	/**
+	 * Adds new headers.
+	 *
+	 * @param name  Name.
+	 * @param value Value.
+	 */
+	public void addHeaders(final String name, final String value) {
+		this.getHeaders().put(name, value);
+	}
+
+	/**
+	 * Remove headers.
+	 *
+	 * @param name Name.
+	 */
+	public void removeHeaders(final String name) {
+		this.getHeaders().remove(name);
 	}
 
 }
