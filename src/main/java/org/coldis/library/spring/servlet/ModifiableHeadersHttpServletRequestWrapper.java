@@ -1,6 +1,7 @@
 package org.coldis.library.spring.servlet;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
