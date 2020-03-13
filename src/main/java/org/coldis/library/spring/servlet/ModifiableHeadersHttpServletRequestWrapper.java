@@ -1,6 +1,5 @@
 package org.coldis.library.spring.servlet;
 
-import java.util.Collections;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +7,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+import org.hibernate.mapping.Collection;
 
 /**
  * Modifiable headers HTTP Servlet request wrapper.
@@ -60,7 +60,8 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 */
 	@Override
 	public String getHeader(final String name) {
-		return this.getHeaders().get(name.toLowerCase()).stream().findAny().orElse(null);
+		final Collection<String> headers = this.getHeaders().get(name.toLowerCase());
+		return (headers == null ? null : headers.stream().findAny().orElse(null));
 	}
 
 	/**
