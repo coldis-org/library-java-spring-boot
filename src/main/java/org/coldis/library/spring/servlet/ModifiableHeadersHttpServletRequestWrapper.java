@@ -7,6 +7,7 @@ import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
 
@@ -62,7 +63,7 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	@Override
 	public String getHeader(final String name) {
 		final Collection<String> headers = this.getHeaders().get(name.toLowerCase());
-		return (headers == null ? null : headers.stream().findAny().orElse(null));
+		return (CollectionUtils.isEmpty(headers) ? null : headers.stream().findAny().orElse(null));
 	}
 
 	/**
