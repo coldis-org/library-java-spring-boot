@@ -3,6 +3,8 @@ package org.coldis.library.spring.servlet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -42,14 +44,14 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 			// Initializes the headers.
 			this.headers = new ArrayListValuedHashMap<>();
 			// For each header.
-			while (this.getHeaderNames().hasMoreElements()) {
-				final String headerName = this.getHeaderNames().nextElement();
+			while (super.getHeaderNames().hasMoreElements()) {
+				final String headerName = super.getHeaderNames().nextElement();
 				// For each header with the name.
-				final Enumeration<String> headersForName = this.getHeaders(headerName);
+				final Enumeration<String> headersForName = super.getHeaders(headerName);
 				while (headersForName.hasMoreElements()) {
 					final String headerValue = headersForName.nextElement();
 					// Adds the header to the map.
-					this.headers.put(headerName.toLowerCase(), headerValue);
+					this.headers.put(headerName, headerValue);
 				}
 			}
 		}
@@ -58,12 +60,22 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	}
 
 	/**
+	 * Gets the header entries.
+	 *
+	 * @param  name Name.
+	 * @return      Header entries.
+	 */
+	private Collection<Entry<String, String>> getHeaderEntries(final String name) {
+		return this.getHeaders().entries().stream().filter(header -> header.getKey().equalsIgnoreCase(name)).collect(Collectors.toList());
+	}
+
+	/**
 	 * @see javax.servlet.http.HttpServletRequestWrapper#getHeader(java.lang.String)
 	 */
 	@Override
 	public String getHeader(final String name) {
-		final Collection<String> headers = this.getHeaders().get(name.toLowerCase());
-		return CollectionUtils.isEmpty(headers) ? null : headers.stream().findAny().orElse(null);
+		final Collection<Entry<String, String>> headerEntries = this.getHeaderEntries(name);
+		return CollectionUtils.isEmpty(headerEntries) ? null : headerEntries.iterator().next().getValue();
 	}
 
 	/**
@@ -79,7 +91,7 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 */
 	@Override
 	public Enumeration<String> getHeaders(final String name) {
-		return Collections.enumeration(this.getHeaders().get(name.toLowerCase()));
+		return Collections.enumeration(this.getHeaderEntries(name).stream().map(header -> header.getValue()).collect(Collectors.toList()));
 	}
 
 	/**
@@ -88,8 +100,8 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 * @param name  Name.
 	 * @param value Value.
 	 */
-	public void addHeaders(final String name, final String value) {
-		this.getHeaders().put(name.toLowerCase(), value);
+	public void addHeader(final String name, final String value) {
+		this.getHeaders().put(name, value);
 	}
 
 	/**
@@ -97,8 +109,19 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 *
 	 * @param name Name.
 	 */
-	public void removeHeaders(final String name) {
-		this.getHeaders().remove(name.toLowerCase());
+	public void removeHeader(final String name) {
+		this.getHeaderEntries(name).stream().map(header -> header.getKey()).forEach(this.getHeaders()::remove);
+	}
+
+	/**
+	 * Adds new headers.
+	 *
+	 * @param name  Name.
+	 * @param value Value.
+	 */
+	public void setHeader(final String name, final String value) {
+		this.getHeaderEntries(name).stream().map(header -> header.getKey()).forEach(this.getHeaders()::remove);
+		this.getHeaders().put(name, value);
 	}
 
 }
