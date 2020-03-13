@@ -63,7 +63,7 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	@Override
 	public String getHeader(final String name) {
 		final Collection<String> headers = this.getHeaders().get(name.toLowerCase());
-		return (CollectionUtils.isEmpty(headers) ? null : headers.stream().findAny().orElse(null));
+		return (CollectionUtils.isEmpty(headers) ? null : headers.iterator().next();
 	}
 
 	/**
