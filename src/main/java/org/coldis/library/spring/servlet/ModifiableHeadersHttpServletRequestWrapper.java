@@ -1,7 +1,5 @@
 package org.coldis.library.spring.servlet;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,6 +8,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
+import org.hibernate.mapping.Collection;
 
 /**
  * Modifiable headers HTTP Servlet request wrapper.
@@ -42,10 +41,10 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 			// Initializes the headers.
 			this.headers = new ArrayListValuedHashMap<>();
 			// For each header.
-			while (this.getHeaderNames().hasMoreElements()) {
-				final String headerName = this.getHeaderNames().nextElement();
+			while (super.getHeaderNames().hasMoreElements()) {
+				final String headerName = super.getHeaderNames().nextElement();
 				// For each header with the name.
-				final Enumeration<String> headersForName = this.getHeaders(headerName);
+				final Enumeration<String> headersForName = super.getHeaders(headerName);
 				while (headersForName.hasMoreElements()) {
 					final String headerValue = headersForName.nextElement();
 					// Adds the header to the map.
