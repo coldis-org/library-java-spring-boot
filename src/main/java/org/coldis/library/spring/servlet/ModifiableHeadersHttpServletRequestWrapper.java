@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.collections4.MultiValuedMap;
 import org.apache.commons.collections4.multimap.ArrayListValuedHashMap;
-import org.hibernate.mapping.Collection;
 
 /**
  * Modifiable headers HTTP Servlet request wrapper.
