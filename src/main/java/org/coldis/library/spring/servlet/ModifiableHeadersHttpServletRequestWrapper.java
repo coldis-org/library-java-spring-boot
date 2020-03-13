@@ -65,8 +65,8 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 * @param  name Name.
 	 * @return      Header entries.
 	 */
-	private Collection<Entry<String, String>> getHeaderEntries(final String name) {
-		return this.getHeaders().entries().stream().filter(header -> header.getKey().equalsIgnoreCase(name)).collect(Collectors.toList());
+	protected Collection<Entry<String, String>> getHeaderEntries(final String name) {
+		return this.getHeaders().entries().stream().filter(header -> name.equalsIgnoreCase(header.getKey())).collect(Collectors.toList());
 	}
 
 	/**
@@ -120,8 +120,8 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 * @param value Value.
 	 */
 	public void setHeader(final String name, final String value) {
-		this.getHeaderEntries(name).stream().map(header -> header.getKey()).forEach(this.getHeaders()::remove);
-		this.getHeaders().put(name, value);
+		this.removeHeader(name);
+		this.addHeader(name, value);
 	}
 
 }
