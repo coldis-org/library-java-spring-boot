@@ -88,7 +88,7 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 * @param value Value.
 	 */
 	public void addHeaders(final String name, final String value) {
-		this.getHeaders().put(name, value);
+		this.getHeaders().put(name.toLowerCase(), value);
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 	 * @param name Name.
 	 */
 	public void removeHeaders(final String name) {
-		this.getHeaders().remove(name);
+		this.getHeaders().remove(name.toLowerCase());
 	}
 
 }
