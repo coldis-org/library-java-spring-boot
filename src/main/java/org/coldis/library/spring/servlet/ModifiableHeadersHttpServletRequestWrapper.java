@@ -44,12 +44,13 @@ public class ModifiableHeadersHttpServletRequestWrapper extends HttpServletReque
 			// Initializes the headers.
 			this.headers = new ArrayListValuedHashMap<>();
 			// For each header.
-			while (super.getHeaderNames().hasMoreElements()) {
-				final String headerName = super.getHeaderNames().nextElement();
+			final Enumeration<String> headerNames = super.getHeaderNames();
+			while (headerNames.hasMoreElements()) {
+				final String headerName = headerNames.nextElement();
 				// For each header with the name.
-				final Enumeration<String> headersForName = super.getHeaders(headerName);
-				while (headersForName.hasMoreElements()) {
-					final String headerValue = headersForName.nextElement();
+				final Enumeration<String> headersValues = super.getHeaders(headerName);
+				while (headersValues.hasMoreElements()) {
+					final String headerValue = headersValues.nextElement();
 					// Adds the header to the map.
 					this.headers.put(headerName, headerValue);
 				}
