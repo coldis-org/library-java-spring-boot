@@ -6,14 +6,14 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 
-import org.coldis.library.persistence.model.AbstractTimestampedEntity;
+import org.coldis.library.persistence.model.AbstractTimestapableEntity;
 
 /**
  * Test entity.
  */
 @Entity
 @IdClass(TestEntityKey.class)
-public class TestEntity extends AbstractTimestampedEntity {
+public class TestEntity extends AbstractTimestapableEntity {
 
 	/**
 	 * Test property.
