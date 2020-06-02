@@ -6,7 +6,7 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.coldis.library.model.TypedObject;
+import org.coldis.library.model.Typable;
 import org.coldis.library.serialization.ObjectMapperHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +28,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ConditionalOnClass(value = Message.class)
 @ConditionalOnProperty(name = "org.coldis.configuration.jms-message-converter-typed-enabled", havingValue = "true",
 matchIfMissing = false)
-public class TypedObjectJmsMessageConverter extends SimpleMessageConverter {
+public class TypableJmsMessageConverter extends SimpleMessageConverter {
 
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(TypedObjectJmsMessageConverter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TypableJmsMessageConverter.class);
 
 	/**
 	 * Object mapper.
@@ -53,14 +53,14 @@ public class TypedObjectJmsMessageConverter extends SimpleMessageConverter {
 			// Tries to convert the JSON object.
 			try {
 				object = ObjectMapperHelper.deserialize(this.objectMapper, ((TextMessage) message).getText(),
-						TypedObject.class, false);
+						Typable.class, false);
 			}
 			// If the object cannot be converted from JSON.
 			catch (final Exception exception) {
 				// Logs it.
-				TypedObjectJmsMessageConverter.LOGGER.error("Object could not be converted from JSON: ",
+				TypableJmsMessageConverter.LOGGER.error("Object could not be converted from JSON: ",
 						exception.getLocalizedMessage());
-				TypedObjectJmsMessageConverter.LOGGER.debug("Object could not be converted from JSON.", exception);
+				TypableJmsMessageConverter.LOGGER.debug("Object could not be converted from JSON.", exception);
 			}
 		}
 		// If the object could not be converted from JSON.
@@ -91,9 +91,9 @@ public class TypedObjectJmsMessageConverter extends SimpleMessageConverter {
 			// If the object cannot be converted from JSON.
 			catch (final Exception exception) {
 				// Logs it.
-				TypedObjectJmsMessageConverter.LOGGER.error("Object could not be serialized to JSON: ",
+				TypableJmsMessageConverter.LOGGER.error("Object could not be serialized to JSON: ",
 						exception.getLocalizedMessage());
-				TypedObjectJmsMessageConverter.LOGGER.debug("Object could not be serialized to JSON.", exception);
+				TypableJmsMessageConverter.LOGGER.debug("Object could not be serialized to JSON.", exception);
 			}
 		}
 		// Returns the message.

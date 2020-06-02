@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
-import org.coldis.library.model.ModelView;
+import org.coldis.library.model.view.ModelView;
 import org.coldis.library.serialization.ObjectMapperHelper;
 import org.coldis.library.service.client.GenericRestServiceClient;
 import org.slf4j.Logger;

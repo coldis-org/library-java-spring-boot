@@ -1,7 +1,7 @@
 package org.coldis.library.spring.health;
 
-import org.coldis.library.model.ModelView;
-import org.coldis.library.model.TypedObject;
+import org.coldis.library.model.Typable;
+import org.coldis.library.model.view.ModelView;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonView;
  * Health check value.
  */
 @JsonTypeName(value = HealthCheckValue.TYPE_NAME)
-public class HealthCheckValue implements TypedObject {
+public class HealthCheckValue implements Typable {
 
 	/**
 	 * Serial.
@@ -53,7 +53,7 @@ public class HealthCheckValue implements TypedObject {
 	}
 
 	/**
-	 * @see org.coldis.library.model.TypedObject#getTypeName()
+	 * @see org.coldis.library.model.Typable#getTypeName()
 	 */
 	@Override
 	@JsonView({ ModelView.Persistent.class, ModelView.Public.class })

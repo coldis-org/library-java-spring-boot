@@ -4,8 +4,8 @@ import javax.persistence.Transient;
 
 import org.coldis.library.dto.DtoAttribute;
 import org.coldis.library.dto.DtoType;
-import org.coldis.library.model.IdentifiedObject;
-import org.coldis.library.model.TypedObject;
+import org.coldis.library.model.Identifiable;
+import org.coldis.library.model.Typable;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonTypeName;
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
  */
 @JsonTypeName(value = DtoTestObject.TYPE_NAME)
 @DtoType(targetPath = "src/test/java", namespace = "org.coldis.library.test.spring.jms")
-public class DtoTestObject implements TypedObject, IdentifiedObject {
+public class DtoTestObject implements Typable, Identifiable {
 
 	/**
 	 * Serial.
@@ -91,7 +91,7 @@ public class DtoTestObject implements TypedObject, IdentifiedObject {
 	}
 
 	/**
-	 * @see org.coldis.library.model.IdentifiedObject#getId()
+	 * @see org.coldis.library.model.Identifiable#getId()
 	 */
 	@Override
 	public Long getId() {
@@ -203,7 +203,7 @@ public class DtoTestObject implements TypedObject, IdentifiedObject {
 	}
 
 	/**
-	 * @see org.coldis.library.model.TypedObject#getTypeName()
+	 * @see org.coldis.library.model.Typable#getTypeName()
 	 */
 	@Override
 	@Transient
