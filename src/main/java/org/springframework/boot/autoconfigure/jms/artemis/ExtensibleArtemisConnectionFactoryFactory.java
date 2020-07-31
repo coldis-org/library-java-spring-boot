@@ -14,7 +14,8 @@ public class ExtensibleArtemisConnectionFactoryFactory extends ArtemisConnection
 	 * @param beanFactory Bean factory.
 	 * @param properties  Properties.
 	 */
-	public ExtensibleArtemisConnectionFactoryFactory(final ListableBeanFactory beanFactory, final ArtemisProperties properties) {
+	public ExtensibleArtemisConnectionFactoryFactory(final ListableBeanFactory beanFactory,
+			final ArtemisProperties properties) {
 		super(beanFactory, properties);
 	}
 
@@ -23,6 +24,6 @@ public class ExtensibleArtemisConnectionFactoryFactory extends ArtemisConnection
 	 */
 	@Override
 	public <T extends ActiveMQConnectionFactory> T createConnectionFactory(final Class<T> factoryClass) {
-		return super.createConnectionFactory(factoryClass).;
+		return super.createConnectionFactory(factoryClass);
 	}
 }
