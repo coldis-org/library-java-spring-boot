@@ -15,6 +15,11 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 public class ValidatorAutoConfiguration {
 
 	/**
+	 * Validator.
+	 */
+	public static ExtendedValidator VALIDATOR;
+
+	/**
 	 * Creates the internal validator.
 	 *
 	 * @return The internal validator.
@@ -31,8 +36,13 @@ public class ValidatorAutoConfiguration {
 	 */
 	@Primary
 	@Bean(name = "extendedValidator")
-	public ExtendedValidator createExtendedValidator(final Validator validator) {
-		return new ExtendedValidator(validator);
+	public ExtendedValidator createExtendedValidator(
+			final Validator validator) {
+		// Makes sure the validator is initialized.
+		ValidatorAutoConfiguration.VALIDATOR = (ValidatorAutoConfiguration.VALIDATOR == null ? new ExtendedValidator(validator)
+				: ValidatorAutoConfiguration.VALIDATOR);
+		// Returns the validator.
+		return ValidatorAutoConfiguration.VALIDATOR;
 	}
 
 }
