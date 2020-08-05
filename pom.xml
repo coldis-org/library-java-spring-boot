@@ -83,6 +83,11 @@
 			<artifactId>spring-jms</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+			<groupId>org.messaginghub</groupId>
+			<artifactId>pooled-jms</artifactId>
+			<optional>true</optional>
+		</dependency>
 
 		<dependency>
 			<groupId>javax.persistence</groupId>
@@ -123,7 +128,7 @@
 			<artifactId>artemis-jms-server</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
