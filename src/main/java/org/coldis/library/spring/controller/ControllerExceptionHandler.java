@@ -44,7 +44,8 @@ public class ControllerExceptionHandler {
 	 * @param  message Message to be enriched.
 	 * @return         The enriched message.
 	 */
-	protected SimpleMessage enrichMessage(final SimpleMessage message) {
+	protected SimpleMessage enrichMessage(
+			final SimpleMessage message) {
 		// The default message is the original one.
 		String actualMessage = message.getContent();
 		// Tries to get the message for the code and arguments.
@@ -54,10 +55,8 @@ public class ControllerExceptionHandler {
 		// If the message could not be found.
 		catch (final NoSuchMessageException exception) {
 			// Ignores it.
-			ControllerExceptionHandler.LOGGER
-			.error("Message could not be enriched for code: '" + message.getCode() + "'.");
-			ControllerExceptionHandler.LOGGER
-			.debug("Message could not be enriched for code: '" + message.getCode() + "'.", exception);
+			ControllerExceptionHandler.LOGGER.error("Message could not be enriched for code: '" + message.getCode() + "': " + exception.getLocalizedMessage());
+			ControllerExceptionHandler.LOGGER.debug("Message could not be enriched for code: '" + message.getCode() + "'.", exception);
 		}
 		// Returns the enriched message
 		message.setContent(actualMessage);
@@ -73,33 +72,32 @@ public class ControllerExceptionHandler {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(ConstraintViolationException.class)
-	public SimpleMessage[] processValidationError(final ConstraintViolationException exception) {
+	public SimpleMessage[] processValidationError(
+			final ConstraintViolationException exception) {
 		// Enriches the violation messages.
 		final List<SimpleMessage> violations = exception.getConstraintViolations().stream().map(violation -> {
 			// Gets the message code.
-			final String messageCode = (violation.getMessageTemplate().startsWith("{")
-					|| StringUtils.isEmpty(violation.getMessageTemplate())
-					? violation.getRootBeanClass().getSimpleName().toLowerCase()
-							+ "." + violation.getPropertyPath().toString().toLowerCase() + "."
-							+ violation.getConstraintDescriptor().getAnnotation().annotationType()
-							.getSimpleName().toLowerCase()
-							: violation.getMessageTemplate());
+			final String messageCode = (violation.getMessageTemplate().startsWith("{") || StringUtils.isEmpty(violation.getMessageTemplate())
+					? violation.getRootBeanClass().getSimpleName().toLowerCase() + "." + violation.getPropertyPath().toString().toLowerCase() + "."
+							+ violation.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName().toLowerCase()
+					: violation.getMessageTemplate());
 			// Gets the message.
-			final String message = violation.getRootBeanClass().getSimpleName().toLowerCase() + "."
-					+ violation.getPropertyPath().toString().toLowerCase() + ": " + violation.getMessage();
+			final String message = violation.getRootBeanClass().getSimpleName().toLowerCase() + "." + violation.getPropertyPath().toString().toLowerCase()
+					+ ": " + violation.getMessage();
 			// Gets the message parameters.
-			final Object[] messageParameters = ArrayUtils.addAll(new Object[] { violation.getInvalidValue() },
-					violation.getExecutableParameters());
+			final Object[] messageParameters = ArrayUtils.addAll(new Object[] { violation.getInvalidValue() }, violation.getExecutableParameters());
 			// Returns the enriched message.
 			return this.enrichMessage(new SimpleMessage(messageCode, message, messageParameters));
 		}).collect(Collectors.toList());
 		// Returns the messages.
-		ControllerExceptionHandler.LOGGER.error("Contraint violation exception returned. Violations: "
-				+ violations.stream().map(violation -> violation.getContent()).reduce("\n",
-						(message, messages) -> messages + message + "\n"));
-		ControllerExceptionHandler.LOGGER.warn("Contraint violation exception returned. Violations: "
-				+ violations.stream().map(violation -> violation.getContent()).reduce("\n",
-						(message, messages) -> messages + message + "\n"),
+		ControllerExceptionHandler.LOGGER.warn("Contraint violation exception returned. Violations: " + violations.stream()
+				.map(violation -> violation.getContent()).reduce("\n", (
+						message,
+						messages) -> messages + message + ". Message: " + exception.getLocalizedMessage()));
+		ControllerExceptionHandler.LOGGER.debug("Contraint violation exception returned. Violations: " + violations.stream()
+				.map(violation -> violation.getContent()).reduce("\n", (
+						message,
+						messages) -> messages + message + "\n"),
 				exception);
 		return violations.toArray(new SimpleMessage[] {});
 	}
@@ -111,14 +109,14 @@ public class ControllerExceptionHandler {
 	 * @return           Response with the exception message.
 	 */
 	@ExceptionHandler(BusinessException.class)
-	public ResponseEntity<SimpleMessage[]> processBusinessException(final BusinessException exception) {
+	public ResponseEntity<SimpleMessage[]> processBusinessException(
+			final BusinessException exception) {
 		// Enriches the exceptions messages.
 		exception.getMessages().forEach(this::enrichMessage);
 		// Returns the message with the exception status code.
-		ControllerExceptionHandler.LOGGER.error("Business exception returned: " + exception.getLocalizedMessage());
-		ControllerExceptionHandler.LOGGER.warn("Business exception returned.", exception);
-		return new ResponseEntity<>(exception.getMessages().toArray(new SimpleMessage[] {}),
-				HttpStatus.valueOf(exception.getStatusCode()));
+		ControllerExceptionHandler.LOGGER.warn("Business exception returned: " + exception.getLocalizedMessage());
+		ControllerExceptionHandler.LOGGER.debug("Business exception returned.", exception);
+		return new ResponseEntity<>(exception.getMessages().toArray(new SimpleMessage[] {}), HttpStatus.valueOf(exception.getStatusCode()));
 	}
 
 	/**
@@ -128,14 +126,13 @@ public class ControllerExceptionHandler {
 	 * @return           Response with the exception message.
 	 */
 	@ExceptionHandler(IntegrationException.class)
-	public ResponseEntity<SimpleMessage[]> processIntegrationException(final IntegrationException exception) {
+	public ResponseEntity<SimpleMessage[]> processIntegrationException(
+			final IntegrationException exception) {
 		// Enriches the exception message.
 		this.enrichMessage(exception.getInternalMessage());
 		// Returns the messages with the exception status code.
-		ControllerExceptionHandler.LOGGER.error("Integration exception returned." + exception.getLocalizedMessage());
-		ControllerExceptionHandler.LOGGER.warn("Integration exception returned.", exception);
-		return new ResponseEntity<>(new SimpleMessage[] { exception.getInternalMessage() },
-				HttpStatus.valueOf(exception.getStatusCode()));
+		ControllerExceptionHandler.LOGGER.error("Integration exception returned.", exception);
+		return new ResponseEntity<>(new SimpleMessage[] { exception.getInternalMessage() }, HttpStatus.valueOf(exception.getStatusCode()));
 	}
 
 	/**
@@ -147,10 +144,10 @@ public class ControllerExceptionHandler {
 	@ResponseBody
 	@ExceptionHandler(Throwable.class)
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	public SimpleMessage[] processOtherException(final Throwable exception) {
+	public SimpleMessage[] processOtherException(
+			final Throwable exception) {
 		// Returns a generic message.
-		ControllerExceptionHandler.LOGGER.error("Exception returned." + exception.getLocalizedMessage());
-		ControllerExceptionHandler.LOGGER.warn("Exception returned.", exception);
+		ControllerExceptionHandler.LOGGER.error("Exception returned.", exception);
 		return new SimpleMessage[] { new SimpleMessage("error.unexpected", exception.getMessage()) };
 	}
 
