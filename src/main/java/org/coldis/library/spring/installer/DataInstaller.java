@@ -3,9 +3,11 @@ package org.coldis.library.spring.installer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.coldis.library.model.view.ModelView;
@@ -39,8 +41,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @RestController
 @RequestMapping(path = "${org.coldis.configuration.data-installer}")
-@ConditionalOnProperty(name = "org.coldis.configuration.data-installer-enabled", havingValue = "true",
-matchIfMissing = true)
+@ConditionalOnProperty(
+		name = "org.coldis.configuration.data-installer-enabled",
+		havingValue = "true",
+		matchIfMissing = true
+)
 public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>, EmbeddedValueResolverAware {
 
 	/**
@@ -70,6 +75,12 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 	private String data;
 
 	/**
+	 * Data not to be installed.
+	 */
+	@Value(value = "#{'${org.coldis.configuration.data-installer-ignore}'.split(',')}")
+	private List<String> ignoreData;
+
+	/**
 	 * Bean factory.
 	 */
 	@Autowired
@@ -92,7 +103,8 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 	 *      setEmbeddedValueResolver(org.springframework.util.StringValueResolver)
 	 */
 	@Override
-	public void setEmbeddedValueResolver(final StringValueResolver resolver) {
+	public void setEmbeddedValueResolver(
+			final StringValueResolver resolver) {
 		this.valueResolver = resolver;
 	}
 
@@ -105,8 +117,10 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 	 * @param  dataObject              Data object.
 	 * @return                         The service operation URL.
 	 */
-	private String getSearchOperationUrl(final String serviceOperationBaseUrl,
-			final DataInstallerSearchStrategy searchStrategy, final String[] searchProperties,
+	private String getSearchOperationUrl(
+			final String serviceOperationBaseUrl,
+			final DataInstallerSearchStrategy searchStrategy,
+			final String[] searchProperties,
 			final Map<String, Object> dataObject) {
 		// Service operation URL.
 		final StringBuffer serviceOperationUrl = new StringBuffer(serviceOperationBaseUrl);
@@ -126,7 +140,7 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 					serviceOperationUrl.append("/");
 					serviceOperationUrl.append(dataObject.get(searchProperty));
 					break;
-					// For query parameter strategy.
+				// For query parameter strategy.
 				case PARAMETER:
 					// Adds the property to the URL.
 					serviceOperationUrl.append(searchProperty + "=" + dataObject.get(searchProperty) + "&");
@@ -143,15 +157,14 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 	 * @param  resourceLocation Resource location.
 	 * @return                  The resource content.
 	 */
-	private String getResourceContent(final String resourceLocation) {
+	private String getResourceContent(
+			final String resourceLocation) {
 		// Resource content.
 		String resourceContent = "";
 		// Tries to get the resource content.
 		try {
 			// Tries to get the resource content.
-			resourceContent = StreamUtils.copyToString(
-					this.resourcePatternResolver.getResource(resourceLocation).getInputStream(),
-					Charset.forName("UTF-8"));
+			resourceContent = StreamUtils.copyToString(this.resourcePatternResolver.getResource(resourceLocation).getInputStream(), Charset.forName("UTF-8"));
 			// Escapes the content and regular expression group reference.
 			resourceContent = StringEscapeUtils.escapeJava(StringEscapeUtils.escapeJava(resourceContent));
 			resourceContent = resourceContent.replace("$", "\\$");
@@ -159,8 +172,7 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 		// If the resource content cannot be retrieved.
 		catch (final Exception exception) {
 			// Logs it.
-			DataInstaller.LOGGER.error("Resource content could not be retrieved for '" + resourceLocation + "'.",
-					exception);
+			DataInstaller.LOGGER.error("Resource content could not be retrieved for '" + resourceLocation + "'.", exception);
 		}
 		// Returns the resource content.
 		return resourceContent;
@@ -172,10 +184,10 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 	 * @param  name Service client bean name.
 	 * @return      The REST service client.
 	 */
-	private GenericRestServiceClient getGenericRestServiceClient(final String name) {
-		return StringUtils.isEmpty(name)
-				? this.beans.getBean("restServiceClient", GenericRestServiceClient.class)
-						: this.beans.getBean(name, GenericRestServiceClient.class);
+	private GenericRestServiceClient getGenericRestServiceClient(
+			final String name) {
+		return StringUtils.isEmpty(name) ? this.beans.getBean("restServiceClient", GenericRestServiceClient.class)
+				: this.beans.getBean(name, GenericRestServiceClient.class);
 	}
 
 	/**
@@ -195,103 +207,107 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 				 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 				 */
 				@Override
-				public final int compare(final Resource resource1, final Resource resource2) {
+				public final int compare(
+						final Resource resource1,
+						final Resource resource2) {
 					return resource1.getFilename().compareTo(resource2.getFilename());
 				}
 			});
 			// For each data set to install.
 			for (final Resource dataSet : dataSets) {
-				// Log information.
-				Integer createdObjects = 0;
-				Integer updatedObjects = 0;
-				Integer failedObjects = 0;
-				DataInstaller.LOGGER.info("Installing data for data set '" + dataSet.getFilename() + "'.");
-				// Gets the data set content.
-				String dataSetContent = StreamUtils.copyToString(dataSet.getInputStream(), Charset.forName("UTF-8"));
-				dataSetContent = Pattern.compile(DataInstaller.RESOURCE_PATTERN).matcher(dataSetContent)
-						.replaceAll(result -> this.getResourceContent(result.group(1)));
-				dataSetContent = Pattern.compile(DataInstaller.PROPERTY_PATTERN).matcher(dataSetContent)
-						.replaceAll(result -> this.valueResolver.resolveStringValue("${" + result.group(1) + "}"));
-				// Gets the installation metadata.
-				final DataInstallationMetadata installationMetadata = ObjectMapperHelper.deserialize(this.objectMapper,
-						dataSetContent, DataInstallationMetadata.class, false);
-				// Gets the service client bean to be used.
-				final GenericRestServiceClient serviceClient = this
-						.getGenericRestServiceClient(installationMetadata.getServiceClientBean());
-				// For each data object to be installed.
-				for (final Map<String, Object> dataObject : installationMetadata.getData()) {
-					// Retrieved object.
-					Map<String, Object> existentDataObject = null;
-					// Tries to get existent data.
-					try {
-						existentDataObject = (serviceClient.executeOperation(
-								this.getSearchOperationUrl(
-										installationMetadata.getServiceOperationUrl() + "/"
-												+ installationMetadata.getSearchOperationPath(),
-												installationMetadata.getSearchPropertiesStrategy(),
-												installationMetadata.getSearchProperties(), dataObject),
-								HttpMethod.GET, null, null, null,
-								new ParameterizedTypeReference<Map<String, Object>>() {
-								}).getBody());
-					}
-					// If the object does not exist.
-					catch (final Exception exception) {
-						// Logs it.
-						DataInstaller.LOGGER.debug("Object '" + ObjectMapperHelper.serialize(this.objectMapper,
-								dataObject, ModelView.Public.class, true) + "' does not exist.", exception);
-					}
-					// If the object does not exist.
-					if (existentDataObject == null) {
-						// Tries to create the object.
+				// If the data should be ignored.
+				if (CollectionUtils.isNotEmpty(ignoreData)
+						&& ignoreData.stream().anyMatch(currentIgnoredData -> dataSet.getFilename().matches(currentIgnoredData))) {
+					// Logs it.
+					DataInstaller.LOGGER.info("Ignoring data installation for data set '" + dataSet.getFilename() + "'.");
+				}
+				// If the data should not be ignored.
+				else {
+					// Log information.
+					Integer createdObjects = 0;
+					Integer updatedObjects = 0;
+					Integer failedObjects = 0;
+					DataInstaller.LOGGER.info("Installing data for data set '" + dataSet.getFilename() + "'.");
+					// Gets the data set content.
+					String dataSetContent = StreamUtils.copyToString(dataSet.getInputStream(), Charset.forName("UTF-8"));
+					dataSetContent = Pattern.compile(DataInstaller.RESOURCE_PATTERN).matcher(dataSetContent)
+							.replaceAll(result -> this.getResourceContent(result.group(1)));
+					dataSetContent = Pattern.compile(DataInstaller.PROPERTY_PATTERN).matcher(dataSetContent)
+							.replaceAll(result -> this.valueResolver.resolveStringValue("${" + result.group(1) + "}"));
+					// Gets the installation metadata.
+					final DataInstallationMetadata installationMetadata = ObjectMapperHelper.deserialize(this.objectMapper, dataSetContent,
+							DataInstallationMetadata.class, false);
+					// Gets the service client bean to be used.
+					final GenericRestServiceClient serviceClient = this.getGenericRestServiceClient(installationMetadata.getServiceClientBean());
+					// For each data object to be installed.
+					for (final Map<String, Object> dataObject : installationMetadata.getData()) {
+						// Retrieved object.
+						Map<String, Object> existentDataObject = null;
+						// Tries to get existent data.
 						try {
-							serviceClient.executeOperation(installationMetadata.getServiceOperationUrl(),
-									HttpMethod.POST, null, dataObject, null, new ParameterizedTypeReference<Void>() {
-							});
-							DataInstaller.LOGGER.debug("Object '" + ObjectMapperHelper.serialize(this.objectMapper,
-									dataObject, ModelView.Public.class, true) + "' created.");
-							createdObjects++;
+							existentDataObject = (serviceClient.executeOperation(
+									this.getSearchOperationUrl(
+											installationMetadata.getServiceOperationUrl() + "/" + installationMetadata.getSearchOperationPath(),
+											installationMetadata.getSearchPropertiesStrategy(), installationMetadata.getSearchProperties(), dataObject),
+									HttpMethod.GET, null, null, null, new ParameterizedTypeReference<Map<String, Object>>() {}).getBody());
 						}
-						// If the object cannot be created.
+						// If the object does not exist.
 						catch (final Exception exception) {
 							// Logs it.
-							DataInstaller.LOGGER.error("Object '" + ObjectMapperHelper.serialize(this.objectMapper,
-									dataObject, ModelView.Public.class, true) + "' could not be created.", exception);
-							failedObjects++;
+							DataInstaller.LOGGER.debug("Object '" + ObjectMapperHelper.serialize(this.objectMapper, dataObject, ModelView.Public.class, true)
+									+ "' does not exist.", exception);
 						}
-					}
-					// If the object does not exist.
-					else {
-						// If data should be updated.
-						if (!installationMetadata.getCreateOnly()) {
-							// Tries to update the object.
+						// If the object does not exist.
+						if (existentDataObject == null) {
+							// Tries to create the object.
 							try {
-								serviceClient.executeOperation(
-										this.getSearchOperationUrl(installationMetadata.getServiceOperationUrl(),
-												installationMetadata.getIdPropertiesStrategy(),
-												installationMetadata.getIdProperties(), existentDataObject),
-										HttpMethod.PUT, null, dataObject, null, new ParameterizedTypeReference<Void>() {
-										});
-								DataInstaller.LOGGER.debug("Object '" + ObjectMapperHelper.serialize(this.objectMapper,
-										dataObject, ModelView.Public.class, true) + "' updated.");
-								updatedObjects++;
+								serviceClient.executeOperation(installationMetadata.getServiceOperationUrl(), HttpMethod.POST, null, dataObject, null,
+										new ParameterizedTypeReference<Void>() {});
+								DataInstaller.LOGGER.debug(
+										"Object '" + ObjectMapperHelper.serialize(this.objectMapper, dataObject, ModelView.Public.class, true) + "' created.");
+								createdObjects++;
 							}
-							// If the object cannot be updated.
+							// If the object cannot be created.
 							catch (final Exception exception) {
 								// Logs it.
-								DataInstaller.LOGGER.error("Object '" + ObjectMapperHelper.serialize(this.objectMapper,
-										dataObject, ModelView.Public.class, true) + "' could not be created.",
+								DataInstaller.LOGGER.error("Object '"
+										+ ObjectMapperHelper.serialize(this.objectMapper, dataObject, ModelView.Public.class, true) + "' could not be created.",
 										exception);
 								failedObjects++;
 							}
 						}
+						// If the object does not exist.
+						else {
+							// If data should be updated.
+							if (!installationMetadata.getCreateOnly()) {
+								// Tries to update the object.
+								try {
+									serviceClient.executeOperation(
+											this.getSearchOperationUrl(installationMetadata.getServiceOperationUrl(),
+													installationMetadata.getIdPropertiesStrategy(), installationMetadata.getIdProperties(), existentDataObject),
+											HttpMethod.PUT, null, dataObject, null, new ParameterizedTypeReference<Void>() {});
+									DataInstaller.LOGGER.debug("Object '"
+											+ ObjectMapperHelper.serialize(this.objectMapper, dataObject, ModelView.Public.class, true) + "' updated.");
+									updatedObjects++;
+								}
+								// If the object cannot be updated.
+								catch (final Exception exception) {
+									// Logs it.
+									DataInstaller.LOGGER
+											.error("Object '" + ObjectMapperHelper.serialize(this.objectMapper, dataObject, ModelView.Public.class, true)
+													+ "' could not be created.", exception);
+									failedObjects++;
+								}
+							}
+						}
 					}
+					// Logs the model data installation.
+					DataInstaller.LOGGER.info(
+							"Data installer finished for '" + dataSet.getFilename() + "' (URL: '" + installationMetadata.getServiceOperationUrl() + "') with '"
+									+ createdObjects + "' created, '" + updatedObjects + "' updated and '" + failedObjects + "' objects with errors.");
 				}
-				// Logs the model data installation.
-				DataInstaller.LOGGER.info("Data installer finished for '" + dataSet.getFilename() + "' (URL: '"
-						+ installationMetadata.getServiceOperationUrl() + "') with '" + createdObjects + "' created, '"
-						+ updatedObjects + "' updated and '" + failedObjects + "' objects with errors.");
+				DataInstaller.LOGGER.info("Finishing data installer");
 			}
-			DataInstaller.LOGGER.info("Finishing data installer");
 		}
 		// If the data cannot be installed.
 		catch (final Exception exception) {
@@ -304,7 +320,8 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 	 * @see org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
 	 */
 	@Override
-	public void onApplicationEvent(final ApplicationReadyEvent event) {
+	public void onApplicationEvent(
+			final ApplicationReadyEvent event) {
 		this.install();
 	}
 
