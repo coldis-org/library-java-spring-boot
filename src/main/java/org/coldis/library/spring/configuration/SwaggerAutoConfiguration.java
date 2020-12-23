@@ -15,7 +15,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  */
 @Configuration
 @EnableSwagger2
-@ConditionalOnProperty(name = "environment", havingValue = "development", matchIfMissing = true)
+@ConditionalOnProperty(
+		name = "environment",
+		havingValue = "development",
+		matchIfMissing = true
+)
 public class SwaggerAutoConfiguration {
 
 	/**
@@ -25,8 +29,7 @@ public class SwaggerAutoConfiguration {
 	 */
 	@Bean(name = "apiDocumentation")
 	public Docket createApiDocumentation() {
-		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
-				.paths(PathSelectors.any()).build();
+		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any()).paths(PathSelectors.any()).build();
 	}
 
 }
