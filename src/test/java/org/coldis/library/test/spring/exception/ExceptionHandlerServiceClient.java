@@ -89,7 +89,7 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 				new ParameterizedTypeReference<Void>() {};
 		// Adds the content type headers.
 		GenericRestServiceClient.addContentTypeHeaders(headers,
-				MediaType.APPLICATION_JSON_UTF8_VALUE);
+				MediaType.APPLICATION_JSON_VALUE);
 		// If the parameter is an array.
 		if (code != null && code.getClass().isArray()) {
 			// For each item.
@@ -171,7 +171,7 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 				new ParameterizedTypeReference<Void>() {};
 		// Adds the content type headers.
 		GenericRestServiceClient.addContentTypeHeaders(headers,
-				MediaType.APPLICATION_JSON_UTF8_VALUE);
+				MediaType.APPLICATION_JSON_VALUE);
 		// If the parameter is an array.
 		if (code != null && code.getClass().isArray()) {
 			// For each item.
@@ -250,7 +250,7 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 				new ParameterizedTypeReference<Void>() {};
 		// Adds the content type headers.
 		GenericRestServiceClient.addContentTypeHeaders(headers,
-				MediaType.APPLICATION_JSON_UTF8_VALUE);
+				MediaType.APPLICATION_JSON_VALUE);
 		// Sets the operation body.
 		body = object;
 		// Executes the operation and returns the response.
