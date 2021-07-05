@@ -82,8 +82,8 @@ public class ControllerExceptionHandler {
 							+ violation.getConstraintDescriptor().getAnnotation().annotationType().getSimpleName().toLowerCase()
 					: violation.getMessageTemplate());
 			// Gets the message.
-			final String message = violation.getRootBeanClass().getSimpleName().toLowerCase() + "." + violation.getPropertyPath().toString().toLowerCase()
-					+ ": " + violation.getMessage();
+			final String message = (violation.getRootBeanClass().getSimpleName().toLowerCase() + "." + violation.getPropertyPath().toString().toLowerCase()
+					+ ": " + violation.getMessage());
 			// Gets the message parameters.
 			final Object[] messageParameters = ArrayUtils.addAll(new Object[] { violation.getInvalidValue() }, violation.getExecutableParameters());
 			// Returns the enriched message.
