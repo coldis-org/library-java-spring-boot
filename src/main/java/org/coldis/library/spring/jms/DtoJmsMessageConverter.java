@@ -29,8 +29,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 @Qualifier("dtoJmsMessageConverter")
 @ConditionalOnClass(value = Message.class)
-@ConditionalOnProperty(name = "org.coldis.configuration.jms-message-converter-dto-enabled", havingValue = "true",
-matchIfMissing = false)
+@ConditionalOnProperty(
+		name = "org.coldis.configuration.jms-message-converter-dto-enabled",
+		havingValue = "true",
+		matchIfMissing = false
+)
 public class DtoJmsMessageConverter extends SimpleMessageConverter {
 
 	/**
@@ -53,7 +56,8 @@ public class DtoJmsMessageConverter extends SimpleMessageConverter {
 	 * @see org.springframework.jms.support.converter.SimpleMessageConverter#fromMessage(javax.jms.Message)
 	 */
 	@Override
-	public Object fromMessage(final Message message) throws JMSException, MessageConversionException {
+	public Object fromMessage(
+			final Message message) throws JMSException, MessageConversionException {
 		// Object.
 		Object object = null;
 		// If the target class is a DTO.
@@ -62,14 +66,12 @@ public class DtoJmsMessageConverter extends SimpleMessageConverter {
 			// Tries to convert the JSON object.
 			try {
 				final Class<?> dtoType = Class.forName(dtoTypeName);
-				object = ObjectMapperHelper.deserialize(this.objectMapper, ((TextMessage) message).getText(), dtoType,
-						false);
+				object = ObjectMapperHelper.deserialize(this.objectMapper, ((TextMessage) message).getText(), dtoType, false);
 			}
 			// If the object cannot be converted from JSON.
 			catch (final Exception exception) {
 				// Logs it.
-				DtoJmsMessageConverter.LOGGER.error("Object could not be converted from JSON: ",
-						exception.getLocalizedMessage());
+				DtoJmsMessageConverter.LOGGER.error("Object could not be converted from JSON: ", exception.getLocalizedMessage());
 				DtoJmsMessageConverter.LOGGER.debug("Object could not be converted from JSON.", exception);
 			}
 		}
@@ -87,8 +89,9 @@ public class DtoJmsMessageConverter extends SimpleMessageConverter {
 	 *      javax.jms.Session)
 	 */
 	@Override
-	public Message toMessage(final Object payload, final Session session)
-			throws JMSException, MessageConversionException {
+	public Message toMessage(
+			final Object payload,
+			final Session session) throws JMSException, MessageConversionException {
 		// Message.
 		Message message = null;
 		// If the payload is a typed object.
@@ -98,19 +101,16 @@ public class DtoJmsMessageConverter extends SimpleMessageConverter {
 			// Tries to create a message.
 			try {
 				// Serializes the payload. // TODO Add views.
-				final String actualPayload = ObjectMapperHelper.serialize(this.objectMapper, payload, null, true);
+				final String actualPayload = ObjectMapperHelper.serialize(this.objectMapper, payload, null, false);
 				// Creates a new text message.
 				message = session.createTextMessage(actualPayload);
 				message.setStringProperty(DtoJmsMessageConverter.DTO_TYPE_PARAMETER,
-						javaDto.get().namespace() + "."
-								+ (javaDto.get().name().isEmpty() ? payload.getClass().getSimpleName() + "Dto"
-										: javaDto.get().name()));
+						javaDto.get().namespace() + "." + (javaDto.get().name().isEmpty() ? payload.getClass().getSimpleName() + "Dto" : javaDto.get().name()));
 			}
 			// If the object cannot be converted from JSON.
 			catch (final Exception exception) {
 				// Logs it.
-				DtoJmsMessageConverter.LOGGER.error("Object could not be serialized to JSON: ",
-						exception.getLocalizedMessage());
+				DtoJmsMessageConverter.LOGGER.error("Object could not be serialized to JSON: ", exception.getLocalizedMessage());
 				DtoJmsMessageConverter.LOGGER.debug("Object could not be serialized to JSON.", exception);
 			}
 		}
