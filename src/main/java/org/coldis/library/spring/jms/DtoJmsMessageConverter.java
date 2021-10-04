@@ -117,7 +117,7 @@ public class DtoJmsMessageConverter extends SimpleMessageConverter {
 		// If there is no message yet.
 		if (message == null) {
 			// Creates a default message.
-			super.toMessage(payload, session);
+			message = super.toMessage(payload, session);
 		}
 		// Returns the message.
 		return message;
