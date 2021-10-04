@@ -26,8 +26,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Component
 @Qualifier("typedJmsMessageConverter")
 @ConditionalOnClass(value = Message.class)
-@ConditionalOnProperty(name = "org.coldis.configuration.jms-message-converter-typed-enabled", havingValue = "true",
-matchIfMissing = false)
+@ConditionalOnProperty(
+		name = "org.coldis.configuration.jms-message-converter-typed-enabled",
+		havingValue = "true",
+		matchIfMissing = false
+)
 public class TypableJmsMessageConverter extends SimpleMessageConverter {
 
 	/**
@@ -45,21 +48,20 @@ public class TypableJmsMessageConverter extends SimpleMessageConverter {
 	 * @see org.springframework.jms.support.converter.SimpleMessageConverter#fromMessage(javax.jms.Message)
 	 */
 	@Override
-	public Object fromMessage(final Message message) throws JMSException, MessageConversionException {
+	public Object fromMessage(
+			final Message message) throws JMSException, MessageConversionException {
 		// Object.
 		Object object = null;
 		// If the target class is a typed object.
 		if ((message instanceof TextMessage) && ((TextMessage) message).getText().contains("typeName")) {
 			// Tries to convert the JSON object.
 			try {
-				object = ObjectMapperHelper.deserialize(this.objectMapper, ((TextMessage) message).getText(),
-						Typable.class, false);
+				object = ObjectMapperHelper.deserialize(this.objectMapper, ((TextMessage) message).getText(), Typable.class, false);
 			}
 			// If the object cannot be converted from JSON.
 			catch (final Exception exception) {
 				// Logs it.
-				TypableJmsMessageConverter.LOGGER.error("Object could not be converted from JSON: ",
-						exception.getLocalizedMessage());
+				TypableJmsMessageConverter.LOGGER.error("Object could not be converted from JSON: ", exception.getLocalizedMessage());
 				TypableJmsMessageConverter.LOGGER.debug("Object could not be converted from JSON.", exception);
 			}
 		}
@@ -77,22 +79,22 @@ public class TypableJmsMessageConverter extends SimpleMessageConverter {
 	 *      javax.jms.Session)
 	 */
 	@Override
-	public Message toMessage(final Object payload, final Session session)
-			throws JMSException, MessageConversionException {
+	public Message toMessage(
+			final Object payload,
+			final Session session) throws JMSException, MessageConversionException {
 		// Actual payload.
 		Object actualPayload = payload;
 		// If the payload is a typed object.
 		if ((payload != null) && (MethodUtils.getMatchingMethod(payload.getClass(), "getTypeName") != null)) {
 			// Tries to serialize the payload.
 			try {
-				actualPayload = ObjectMapperHelper.serialize(this.objectMapper, actualPayload, null, true); // TODO Add
+				actualPayload = ObjectMapperHelper.serialize(this.objectMapper, actualPayload, null, false); // TODO Add
 				// views.
 			}
 			// If the object cannot be converted from JSON.
 			catch (final Exception exception) {
 				// Logs it.
-				TypableJmsMessageConverter.LOGGER.error("Object could not be serialized to JSON: ",
-						exception.getLocalizedMessage());
+				TypableJmsMessageConverter.LOGGER.error("Object could not be serialized to JSON: ", exception.getLocalizedMessage());
 				TypableJmsMessageConverter.LOGGER.debug("Object could not be serialized to JSON.", exception);
 			}
 		}
