@@ -37,6 +37,7 @@ public class RepositoryHealthCheckService {
 		// Gets the health check object.
 		final KeyValue<Typable> healthCheck = this.keyValuService.lock(HealthCheckService.HEALTH_CHECK_KEY).get();
 		// Saves the health check again.
+		healthCheck.setValue(new HealthCheckValue());
 		healthCheck.setUpdatedAt(DateTimeHelper.getCurrentLocalDateTime());
 		return (HealthCheckValue) healthCheck.getValue();
 	}
