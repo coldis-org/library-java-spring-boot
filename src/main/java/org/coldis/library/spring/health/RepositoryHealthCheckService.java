@@ -1,8 +1,10 @@
 package org.coldis.library.spring.health;
 
 import org.coldis.library.helper.DateTimeHelper;
+import org.coldis.library.model.Typable;
 import org.coldis.library.persistence.keyvalue.KeyValue;
 import org.coldis.library.persistence.keyvalue.KeyValueRepository;
+import org.coldis.library.persistence.keyvalue.KeyValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,7 @@ public class RepositoryHealthCheckService {
 	 * Health check repository.
 	 */
 	@Autowired(required = false)
-	private KeyValueRepository<HealthCheckValue> healthCheckRepository;
+	private KeyValueService keyValuService;
 
 	/**
 	 * Touches the health check repository.
@@ -29,21 +31,14 @@ public class RepositoryHealthCheckService {
 	 */
 	@Transactional(
 			propagation = Propagation.REQUIRED,
-			timeout = 1
+			timeout = 3
 	)
 	public HealthCheckValue touch() {
-		HealthCheckValue checkValue;
 		// Gets the health check object.
-		KeyValue<HealthCheckValue> healthCheck = this.healthCheckRepository.findByIdForUpdate(HealthCheckService.HEALTH_CHECK_KEY).orElse(null);
-		// If the health check does not exist yet.
-		if (healthCheck == null) {
-			// Creates a new health check.
-			healthCheck = new KeyValue<>(HealthCheckService.HEALTH_CHECK_KEY, new HealthCheckValue());
-		}
+		final KeyValue<Typable> healthCheck = this.keyValuService.lock(HealthCheckService.HEALTH_CHECK_KEY).get();
 		// Saves the health check again.
 		healthCheck.setUpdatedAt(DateTimeHelper.getCurrentLocalDateTime());
-		checkValue = this.healthCheckRepository.save(healthCheck).getValue();
-		return checkValue;
+		return (HealthCheckValue) healthCheck.getValue();
 	}
 
 }
