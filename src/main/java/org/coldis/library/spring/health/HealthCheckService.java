@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(path = "${org.coldis.configuration.health-check}")
-@ConditionalOnProperty(name = "org.coldis.configuration.health-check-enabled", havingValue = "true",
-matchIfMissing = true)
+@ConditionalOnProperty(
+		name = "org.coldis.configuration.health-check-enabled",
+		havingValue = "true",
+		matchIfMissing = true
+)
 public class HealthCheckService {
 
 	/**
@@ -36,10 +39,11 @@ public class HealthCheckService {
 	/**
 	 * Health check service.
 	 *
-	 * @return The health check value.
+	 * @return           The health check value.
+	 * @throws Throwable If the health cannot be checked.
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	public HealthCheckValue check() {
+	public HealthCheckValue check() throws Throwable {
 		HealthCheckService.LOGGER.debug("Health check starting.");
 		final long initMillis = System.currentTimeMillis();
 		try {
@@ -64,8 +68,7 @@ public class HealthCheckService {
 		finally {
 			// Logs the successful health check.
 			final long executionTime = System.currentTimeMillis() - initMillis;
-			HealthCheckService.LOGGER
-			.debug("Health check successfully finished within '" + executionTime + "' milliseconds.");
+			HealthCheckService.LOGGER.debug("Health check successfully finished within '" + executionTime + "' milliseconds.");
 		}
 	}
 
