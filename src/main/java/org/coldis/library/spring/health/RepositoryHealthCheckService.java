@@ -32,7 +32,7 @@ public class RepositoryHealthCheckService {
 	 */
 	@Transactional(
 			propagation = Propagation.REQUIRED,
-			timeout = 1
+			timeout = 2
 	)
 	public HealthCheckValue touch() throws BusinessException {
 		// Gets the health check object.
