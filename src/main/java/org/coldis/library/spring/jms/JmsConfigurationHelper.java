@@ -2,10 +2,13 @@ package org.coldis.library.spring.jms;
 
 import javax.jms.ConnectionFactory;
 
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jms.JmsPoolConnectionFactoryFactory;
 import org.springframework.boot.autoconfigure.jms.JmsProperties.AcknowledgeMode;
 import org.springframework.boot.autoconfigure.jms.artemis.ArtemisProperties;
+import org.springframework.boot.autoconfigure.jms.artemis.ExtensibleArtemisConnectionFactoryFactory;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
@@ -27,7 +30,8 @@ public class JmsConfigurationHelper {
 	public static ConnectionFactory createJmsConnectionFactory(
 			final ListableBeanFactory beanFactory,
 			final ArtemisProperties properties) {
-		return JmsConfigurationHelper.createJmsConnectionFactory(beanFactory, properties);
+		return new JmsPoolConnectionFactoryFactory(properties.getPool()).createPooledConnectionFactory(
+				new ExtensibleArtemisConnectionFactoryFactory(beanFactory, properties).createConnectionFactory(ActiveMQConnectionFactory.class));
 	}
 
 	/**
