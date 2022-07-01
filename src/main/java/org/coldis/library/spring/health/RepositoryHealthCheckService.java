@@ -1,8 +1,6 @@
 package org.coldis.library.spring.health;
 
 import org.coldis.library.exception.BusinessException;
-import org.coldis.library.model.Typable;
-import org.coldis.library.persistence.keyvalue.KeyValue;
 import org.coldis.library.persistence.keyvalue.KeyValueRepository;
 import org.coldis.library.persistence.keyvalue.KeyValueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +30,10 @@ public class RepositoryHealthCheckService {
 	 */
 	@Transactional(
 			propagation = Propagation.REQUIRED,
-			timeout = 2
+			timeout = 5
 	)
 	public HealthCheckValue touch() throws BusinessException {
-		// Gets the health check object.
-		final KeyValue<Typable> healthCheck = this.keyValueService.lock(HealthCheckService.HEALTH_CHECK_KEY).get();
-		// Saves the health check again.
-		healthCheck.setValue(new HealthCheckValue());
-		this.keyValueService.update(HealthCheckService.HEALTH_CHECK_KEY, healthCheck.getValue());
-		return (HealthCheckValue) healthCheck.getValue();
+		return (HealthCheckValue) this.keyValueService.lock(HealthCheckService.HEALTH_CHECK_KEY).get().getValue();
 	}
 
 }
