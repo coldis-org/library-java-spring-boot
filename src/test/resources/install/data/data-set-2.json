@@ -1,4 +1,5 @@
 {
+    "asynchronously": true,
     "serviceOperationUrl": "http://localhost:${property:server.port}/${property:org.coldis.library.spring.test.data-installer}",
     "idProperties": ["property1", "property2"],
     "searchProperties": ["property1", "property2"],

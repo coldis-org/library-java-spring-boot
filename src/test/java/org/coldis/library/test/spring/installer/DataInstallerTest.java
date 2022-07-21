@@ -1,5 +1,7 @@
 package org.coldis.library.test.spring.installer;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.coldis.library.spring.installer.DataInstaller;
 import org.coldis.library.test.TestHelper;
@@ -20,20 +22,17 @@ public class DataInstallerTest extends TestHelper {
 	/**
 	 * Test data.
 	 */
-	public static final TestEntity[] NON_UPDATABLE_DATA = { new TestEntity(13, 23, "33"),
-					new TestEntity(14, 24, "teste5\r\n	\r\n\"abc") };
+	public static final TestEntity[] NON_UPDATABLE_DATA = { new TestEntity(13, 23, "33"), new TestEntity(14, 24, "teste5\r\n	\r\n\"abc") };
 
 	/**
 	 * Test data.
 	 */
-	public static final TestEntity[] UPDATABLE_DATA = { new TestEntity(10, 20, "30"), new TestEntity(11, 21, "31"),
-					new TestEntity(12, 22, "32") };
+	public static final TestEntity[] UPDATABLE_DATA = { new TestEntity(10, 20, "30"), new TestEntity(11, 21, "31"), new TestEntity(12, 22, "32") };
 
 	/**
 	 * Test data.
 	 */
-	public static final TestEntity[] ALL_DATA = ArrayUtils.addAll(DataInstallerTest.NON_UPDATABLE_DATA,
-			DataInstallerTest.UPDATABLE_DATA);
+	public static final TestEntity[] ALL_DATA = ArrayUtils.addAll(DataInstallerTest.NON_UPDATABLE_DATA, DataInstallerTest.UPDATABLE_DATA);
 
 	/**
 	 * Test repository.
@@ -68,8 +67,9 @@ public class DataInstallerTest extends TestHelper {
 		// For each test object.
 		for (final TestEntity testEntity : DataInstallerTest.ALL_DATA) {
 			// Asserts that the object have been created.
-			Assertions.assertEquals(testEntity, this.testRepository
-					.findById(new TestEntityKey(testEntity.getProperty1(), testEntity.getProperty2())).orElse(null));
+			Assertions.assertTrue(TestHelper.waitUntilValid(
+					() -> this.testRepository.findById(new TestEntityKey(testEntity.getProperty1(), testEntity.getProperty2())).orElse(null),
+					data -> Objects.equals(testEntity, data), TestHelper.LONG_WAIT, TestHelper.SHORT_WAIT));
 		}
 	}
 
@@ -85,28 +85,33 @@ public class DataInstallerTest extends TestHelper {
 		// For each test object.
 		for (final TestEntity testEntity : DataInstallerTest.ALL_DATA) {
 			// Asserts that the object have been created.
-			Assertions.assertEquals(testEntity, this.testRepository
-					.findById(new TestEntityKey(testEntity.getProperty1(), testEntity.getProperty2())).orElse(null));
+			Assertions.assertTrue(TestHelper.waitUntilValid(
+					() -> this.testRepository.findById(new TestEntityKey(testEntity.getProperty1(), testEntity.getProperty2())).orElse(null),
+					data -> Objects.equals(testEntity, data), TestHelper.LONG_WAIT, TestHelper.SHORT_WAIT));
 		}
 		// Installs data.
 		this.dataInstaller.install();
 		// For each updatable object.
 		for (final TestEntity testEntity : DataInstallerTest.UPDATABLE_DATA) {
-			// Gets the persisted entity.
-			final TestEntity persistedEntity = this.testRepository
-					.findById(new TestEntityKey(testEntity.getProperty1(), testEntity.getProperty2())).orElse(null);
 			// Asserts that the object have been created.
-			Assertions.assertEquals(testEntity, persistedEntity);
+			Assertions.assertTrue(TestHelper.waitUntilValid(
+					() -> this.testRepository.findById(new TestEntityKey(testEntity.getProperty1(), testEntity.getProperty2())).orElse(null),
+					data -> Objects.equals(testEntity, data), TestHelper.LONG_WAIT, TestHelper.SHORT_WAIT));
+			// Gets the persisted entity.
+			final TestEntity persistedEntity = this.testRepository.findById(new TestEntityKey(testEntity.getProperty1(), testEntity.getProperty2()))
+					.orElse(null);
 			// Makes sure the created and updated date are different.
 			Assertions.assertTrue(persistedEntity.getCreatedAt().isBefore(persistedEntity.getUpdatedAt()));
 		}
 		// For each non-updatable object.
 		for (final TestEntity testEntity : DataInstallerTest.NON_UPDATABLE_DATA) {
-			// Gets the persisted entity.
-			final TestEntity persistedEntity = this.testRepository
-					.findById(new TestEntityKey(testEntity.getProperty1(), testEntity.getProperty2())).orElse(null);
 			// Asserts that the object have been created.
-			Assertions.assertEquals(testEntity, persistedEntity);
+			Assertions.assertTrue(TestHelper.waitUntilValid(
+					() -> this.testRepository.findById(new TestEntityKey(testEntity.getProperty1(), testEntity.getProperty2())).orElse(null),
+					data -> Objects.equals(testEntity, data), TestHelper.LONG_WAIT, TestHelper.SHORT_WAIT));
+			// Gets the persisted entity.
+			final TestEntity persistedEntity = this.testRepository.findById(new TestEntityKey(testEntity.getProperty1(), testEntity.getProperty2()))
+					.orElse(null);
 			// Makes sure the created and updated date are different.
 			Assertions.assertTrue(persistedEntity.getCreatedAt().isEqual(persistedEntity.getUpdatedAt()));
 		}

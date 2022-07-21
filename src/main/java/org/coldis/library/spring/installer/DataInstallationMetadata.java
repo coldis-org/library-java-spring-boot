@@ -1,13 +1,20 @@
 package org.coldis.library.spring.installer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Data installation metadata.
  */
 public class DataInstallationMetadata {
+
+	/**
+	 * If installation should happen asynchronously.
+	 */
+	private boolean asynchronously;
 
 	/**
 	 * Service client bean.
@@ -55,6 +62,25 @@ public class DataInstallationMetadata {
 	private List<Map<String, Object>> data;
 
 	/**
+	 * Gets the asynchronously.
+	 *
+	 * @return The asynchronously.
+	 */
+	public boolean getAsynchronously() {
+		return this.asynchronously;
+	}
+
+	/**
+	 * Sets the asynchronously.
+	 *
+	 * @param asynchronously New asynchronously.
+	 */
+	public void setAsynchronously(
+			final boolean asynchronously) {
+		this.asynchronously = asynchronously;
+	}
+
+	/**
 	 * Gets the serviceClientBean.
 	 *
 	 * @return The serviceClientBean.
@@ -68,7 +94,8 @@ public class DataInstallationMetadata {
 	 *
 	 * @param serviceClientBean New serviceClientBean.
 	 */
-	public void setServiceClientBean(final String serviceClientBean) {
+	public void setServiceClientBean(
+			final String serviceClientBean) {
 		this.serviceClientBean = serviceClientBean;
 	}
 
@@ -86,7 +113,8 @@ public class DataInstallationMetadata {
 	 *
 	 * @param serviceOperationUrl New service operation URL.
 	 */
-	public void setServiceOperationUrl(final String serviceOperationUrl) {
+	public void setServiceOperationUrl(
+			final String serviceOperationUrl) {
 		this.serviceOperationUrl = serviceOperationUrl;
 	}
 
@@ -104,7 +132,8 @@ public class DataInstallationMetadata {
 	 *
 	 * @param idProperties New id properties.
 	 */
-	public void setIdProperties(final String[] idProperties) {
+	public void setIdProperties(
+			final String[] idProperties) {
 		this.idProperties = idProperties;
 	}
 
@@ -122,7 +151,8 @@ public class DataInstallationMetadata {
 	 *
 	 * @param idPropertiesStrategy New id properties strategy.
 	 */
-	public void setIdPropertiesStrategy(final DataInstallerSearchStrategy idPropertiesStrategy) {
+	public void setIdPropertiesStrategy(
+			final DataInstallerSearchStrategy idPropertiesStrategy) {
 		this.idPropertiesStrategy = idPropertiesStrategy;
 	}
 
@@ -140,7 +170,8 @@ public class DataInstallationMetadata {
 	 *
 	 * @param searchProperties New search properties.
 	 */
-	public void setSearchProperties(final String[] searchProperties) {
+	public void setSearchProperties(
+			final String[] searchProperties) {
 		this.searchProperties = searchProperties;
 	}
 
@@ -158,7 +189,8 @@ public class DataInstallationMetadata {
 	 *
 	 * @param searchPropertiesStrategy New search properties strategy.
 	 */
-	public void setSearchPropertiesStrategy(final DataInstallerSearchStrategy searchPropertiesStrategy) {
+	public void setSearchPropertiesStrategy(
+			final DataInstallerSearchStrategy searchPropertiesStrategy) {
 		this.searchPropertiesStrategy = searchPropertiesStrategy;
 	}
 
@@ -176,7 +208,8 @@ public class DataInstallationMetadata {
 	 *
 	 * @param searchOperationPath New search operation path.
 	 */
-	public void setSearchOperationPath(final String searchOperationPath) {
+	public void setSearchOperationPath(
+			final String searchOperationPath) {
 		this.searchOperationPath = searchOperationPath;
 	}
 
@@ -197,7 +230,8 @@ public class DataInstallationMetadata {
 	 *
 	 * @param data New data.
 	 */
-	public void setData(final List<Map<String, Object>> data) {
+	public void setData(
+			final List<Map<String, Object>> data) {
 		this.data = data;
 	}
 
@@ -215,8 +249,43 @@ public class DataInstallationMetadata {
 	 *
 	 * @param createOnly New createOnly.
 	 */
-	public void setCreateOnly(final Boolean createOnly) {
+	public void setCreateOnly(
+			final Boolean createOnly) {
 		this.createOnly = createOnly;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + Arrays.hashCode(this.idProperties);
+		result = (prime * result) + Arrays.hashCode(this.searchProperties);
+		result = (prime * result) + Objects.hash(this.asynchronously, this.createOnly, this.data, this.idPropertiesStrategy, this.searchOperationPath,
+				this.searchPropertiesStrategy, this.serviceClientBean, this.serviceOperationUrl);
+		return result;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(
+			final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof DataInstallationMetadata)) {
+			return false;
+		}
+		final DataInstallationMetadata other = (DataInstallationMetadata) obj;
+		return Objects.equals(this.asynchronously, other.asynchronously) && Objects.equals(this.createOnly, other.createOnly)
+				&& Objects.equals(this.data, other.data) && Arrays.equals(this.idProperties, other.idProperties)
+				&& (this.idPropertiesStrategy == other.idPropertiesStrategy) && Objects.equals(this.searchOperationPath, other.searchOperationPath)
+				&& Arrays.equals(this.searchProperties, other.searchProperties) && (this.searchPropertiesStrategy == other.searchPropertiesStrategy)
+				&& Objects.equals(this.serviceClientBean, other.serviceClientBean) && Objects.equals(this.serviceOperationUrl, other.serviceOperationUrl);
 	}
 
 }
