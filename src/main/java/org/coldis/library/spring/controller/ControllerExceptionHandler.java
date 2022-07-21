@@ -55,7 +55,6 @@ public class ControllerExceptionHandler {
 		// If the message could not be found.
 		catch (final NoSuchMessageException exception) {
 			// Ignores it.
-			ControllerExceptionHandler.LOGGER.error("Message could not be enriched for code: '" + message.getCode() + "': " + exception.getLocalizedMessage());
 			ControllerExceptionHandler.LOGGER.debug("Message could not be enriched for code: '" + message.getCode() + "'.", exception);
 		}
 		// Returns the enriched message
@@ -90,10 +89,6 @@ public class ControllerExceptionHandler {
 			return this.enrichMessage(new SimpleMessage(messageCode, message, messageParameters));
 		}).collect(Collectors.toList());
 		// Returns the messages.
-		ControllerExceptionHandler.LOGGER.warn("Contraint violation exception returned. Violations: " + violations.stream()
-				.map(violation -> violation.getContent()).reduce("\n", (
-						message,
-						messages) -> messages + message + ". Message: " + exception.getLocalizedMessage()));
 		ControllerExceptionHandler.LOGGER.debug("Contraint violation exception returned. Violations: " + violations.stream()
 				.map(violation -> violation.getContent()).reduce("\n", (
 						message,
@@ -114,7 +109,6 @@ public class ControllerExceptionHandler {
 		// Enriches the exceptions messages.
 		exception.getMessages().forEach(this::enrichMessage);
 		// Returns the message with the exception status code.
-		ControllerExceptionHandler.LOGGER.warn("Business exception returned: " + exception.getLocalizedMessage());
 		ControllerExceptionHandler.LOGGER.debug("Business exception returned.", exception);
 		return new ResponseEntity<>(exception.getMessages().toArray(new SimpleMessage[] {}), HttpStatus.valueOf(exception.getStatusCode()));
 	}

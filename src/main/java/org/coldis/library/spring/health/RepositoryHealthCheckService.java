@@ -1,11 +1,14 @@
 package org.coldis.library.spring.health;
 
-import org.coldis.library.helper.DateTimeHelper;
+import org.coldis.library.exception.BusinessException;
+import org.coldis.library.model.Typable;
 import org.coldis.library.persistence.keyvalue.KeyValue;
 import org.coldis.library.persistence.keyvalue.KeyValueRepository;
+import org.coldis.library.persistence.keyvalue.KeyValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -19,28 +22,29 @@ public class RepositoryHealthCheckService {
 	 * Health check repository.
 	 */
 	@Autowired(required = false)
-	private KeyValueRepository<HealthCheckValue> healthCheckRepository;
+	private KeyValueService keyValueService;
 
 	/**
 	 * Touches the health check repository.
 	 *
-	 * @return The health check value.
+	 * @return                   The health check value.
+	 * @throws BusinessException If the health check does not work.
 	 */
-	@Transactional
-	public HealthCheckValue touch() {
-		HealthCheckValue checkValue;
-		// Gets the health check object.
-		KeyValue<HealthCheckValue> healthCheck = this.healthCheckRepository
-				.findById(HealthCheckService.HEALTH_CHECK_KEY).orElse(null);
-		// If the health check does not exist yet.
-		if (healthCheck == null) {
-			// Creates a new health check.
-			healthCheck = new KeyValue<>(HealthCheckService.HEALTH_CHECK_KEY, new HealthCheckValue());
+	@Transactional(
+			propagation = Propagation.REQUIRED,
+			timeout = 5
+	)
+	public HealthCheckValue touch() throws BusinessException {
+		KeyValue<Typable> healthCheckKeyValue = null;
+		try {
+			healthCheckKeyValue = this.keyValueService.findById(HealthCheckService.HEALTH_CHECK_KEY, false);
 		}
-		// Saves the health check again.
-		healthCheck.setUpdatedAt(DateTimeHelper.getCurrentLocalDateTime());
-		checkValue = this.healthCheckRepository.save(healthCheck).getValue();
-		return checkValue;
+		catch (final BusinessException exception) {
+			healthCheckKeyValue = this.keyValueService.lock(HealthCheckService.HEALTH_CHECK_KEY).get();
+			healthCheckKeyValue.setValue(new HealthCheckValue());
+			this.keyValueService.update(HealthCheckService.HEALTH_CHECK_KEY, healthCheckKeyValue.getValue());
+		}
+		return (HealthCheckValue) healthCheckKeyValue.getValue();
 	}
 
 }

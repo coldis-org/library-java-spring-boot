@@ -62,6 +62,7 @@ public class DtoTestObjectDto implements Serializable {
 	 * Gets the id.
 	 * @return The id.
 	 */
+	
 	@ApiModelProperty(
 			required = false,
 			value = "id",
@@ -95,6 +96,7 @@ public class DtoTestObjectDto implements Serializable {
 	 * Gets the test5.
 	 * @return The test5.
 	 */
+	
 	@ApiModelProperty(
 			required = false,
 			value = "test5",
@@ -107,6 +109,7 @@ public class DtoTestObjectDto implements Serializable {
 	 * Gets the test7.
 	 * @return The test7.
 	 */
+	
 	@ApiModelProperty(
 			required = false,
 			value = "test7",
@@ -140,6 +143,7 @@ public class DtoTestObjectDto implements Serializable {
 	 * Gets the test8.
 	 * @return The test8.
 	 */
+	
 	@ApiModelProperty(
 			required = false,
 			value = "test8",
@@ -173,6 +177,7 @@ public class DtoTestObjectDto implements Serializable {
 	 * Gets the test9.
 	 * @return The test9.
 	 */
+	
 	@ApiModelProperty(
 			required = false,
 			value = "test9",
@@ -206,6 +211,7 @@ public class DtoTestObjectDto implements Serializable {
 	 * Gets the typeName.
 	 * @return The typeName.
 	 */
+	
 	@ApiModelProperty(
 			required = false,
 			value = "typeName",
