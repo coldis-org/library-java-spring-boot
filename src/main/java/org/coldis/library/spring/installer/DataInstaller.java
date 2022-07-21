@@ -130,13 +130,13 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 	 */
 	@Autowired
 	private void setThreadPoolSize(
-			@Value("${br.com.supersim.service.log.thread.pool.core-size:3}")
+			@Value("${org.coldis.library.spring.data-installer.thread.pool.core-size:3}")
 			final Integer corePoolSize,
-			@Value("${br.com.supersim.service.log.thread.pool.max-size:5}")
+			@Value("${org.coldis.library.spring.data-installer.thread.pool.max-size:5}")
 			final Integer maxPoolSize,
-			@Value("${br.com.supersim.service.log.thread.pool.queue-size:1024}")
+			@Value("${org.coldis.library.spring.data-installer.thread.pool.queue-size:1024}")
 			final Integer queueSize,
-			@Value("${br.com.supersim.service.log.thread.pool.keep-alive:37}")
+			@Value("${org.coldis.library.spring.data-installer.thread.pool.keep-alive:37}")
 			final Integer keepAlive) {
 		final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(corePoolSize, maxPoolSize, keepAlive, TimeUnit.SECONDS,
 				new ArrayBlockingQueue<>(queueSize, true));
