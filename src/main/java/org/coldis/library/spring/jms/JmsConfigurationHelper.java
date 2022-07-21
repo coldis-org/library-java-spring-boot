@@ -13,6 +13,7 @@ import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.destination.DestinationResolver;
+import org.springframework.util.ErrorHandler;
 import org.springframework.util.backoff.ExponentialBackOff;
 
 /**
