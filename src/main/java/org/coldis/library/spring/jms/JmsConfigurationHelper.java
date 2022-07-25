@@ -75,6 +75,33 @@ public class JmsConfigurationHelper {
 	}
 
 	/**
+	 * Creates the JMS container factory.
+	 *
+	 * @param  connectionFactory      Connection factory.
+	 * @param  destinationResolver    Destination resolver.
+	 * @param  messageConverter       Message converter.
+	 * @param  backoffInitialInterval Back-off initial interval
+	 * @param  backoffMultiplier      Back-off multiplier.
+	 * @param  backoffMaxInterval     Back-off max interval.
+	 * @return                        The JMS container factory.
+	 */
+	public static DefaultJmsListenerContainerFactory createJmsTopicContainerFactory(
+			final ConnectionFactory connectionFactory,
+			final DestinationResolver destinationResolver,
+			final MessageConverter messageConverter,
+			final Long backoffInitialInterval,
+			final Double backoffMultiplier,
+			final Long backoffMaxInterval) {
+		// Creates a new container factory.
+		final DefaultJmsListenerContainerFactory jmsContainerFactory = JmsConfigurationHelper.createJmsContainerFactory(connectionFactory, destinationResolver,
+				messageConverter, backoffInitialInterval, backoffMultiplier, backoffMaxInterval);
+		jmsContainerFactory.setSubscriptionDurable(true);
+		jmsContainerFactory.setSubscriptionShared(true);
+		// Returns the container factory.
+		return jmsContainerFactory;
+	}
+
+	/**
 	 * Creates the JMS template.
 	 *
 	 * @param  connectionFactory   Connection factory.
