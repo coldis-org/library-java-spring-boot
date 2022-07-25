@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConditionalOnClass(value = { JmsTemplate.class, ArtemisProperties.class })
-public class ArtemisJmsTemplateService implements JmsTemplateService {
+public class ArtemisJmsTemplateHelperService implements JmsTemplateHelperService {
 
 	/**
 	 * Random.
@@ -21,7 +21,7 @@ public class ArtemisJmsTemplateService implements JmsTemplateService {
 	private static final Random RANDOM = new Random();
 
 	/**
-	 * @see org.coldis.library.spring.jms.JmsTemplateService#send(org.springframework.jms.core.JmsTemplate,
+	 * @see org.coldis.library.spring.jms.JmsTemplateHelperService#send(org.springframework.jms.core.JmsTemplate,
 	 *      java.lang.String, java.lang.Object, java.lang.String, java.lang.Integer,
 	 *      java.lang.Integer)
 	 */
@@ -42,7 +42,7 @@ public class ArtemisJmsTemplateService implements JmsTemplateService {
 			final javax.jms.Message jmsMessage = jmsTemplate.getMessageConverter().toMessage(message, session);
 			if ((actualMinimumDelaySeconds > 0) || (actualMaximumDelaySeconds > 0)) {
 				jmsMessage.setLongProperty(Message.HDR_SCHEDULED_DELIVERY_TIME.toString(), System.currentTimeMillis() + (actualMinimumDelaySeconds * 1000)
-						+ (actualMaximumDelaySeconds == 0 ? 0 : ArtemisJmsTemplateService.RANDOM.nextInt(actualMaximumDelaySeconds * 1000)));
+						+ (actualMaximumDelaySeconds == 0 ? 0 : ArtemisJmsTemplateHelperService.RANDOM.nextInt(actualMaximumDelaySeconds * 1000)));
 			}
 			// Sets the message id.
 			if (messageId != null) {

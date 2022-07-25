@@ -5,7 +5,7 @@ import org.springframework.jms.core.JmsTemplate;
 /**
  * JMS template service.
  */
-public interface JmsTemplateService {
+public interface JmsTemplateHelperService {
 
 	/**
 	 * Sends a JMS message.

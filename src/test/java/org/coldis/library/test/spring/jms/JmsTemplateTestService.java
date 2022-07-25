@@ -6,7 +6,7 @@ import java.util.Set;
 import javax.jms.JMSException;
 import javax.jms.Message;
 
-import org.coldis.library.spring.jms.JmsTemplateService;
+import org.coldis.library.spring.jms.JmsTemplateHelperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ public class JmsTemplateTestService {
 	 * JMS template.
 	 */
 	@Autowired
-	private JmsTemplateService jmsTemplateService;
+	private JmsTemplateHelperService jmsTemplateHelperService;
 
 	/**
 	 * Consumes messages.
@@ -69,7 +69,7 @@ public class JmsTemplateTestService {
 			final String messageId,
 			final Integer minimumDelaySeconds,
 			final Integer maximumDelaySeconds) {
-		this.jmsTemplateService.send(this.jmsTemplate, destination, message, messageId, minimumDelaySeconds, maximumDelaySeconds);
+		this.jmsTemplateHelperService.send(this.jmsTemplate, destination, message, messageId, minimumDelaySeconds, maximumDelaySeconds);
 	}
 
 }
