@@ -53,7 +53,9 @@ public class JmsTemplateTestService {
 			final Long timeout) throws JMSException {
 		this.jmsTemplate.setReceiveTimeout(timeout);
 		final Message message = this.jmsTemplate.receive(destination);
-		JmsTemplateTestService.ACKED_MESSAGES.add(message.getBody(String.class));
+		if (message != null) {
+			JmsTemplateTestService.ACKED_MESSAGES.add(message.getBody(String.class));
+		}
 	}
 
 	/**
