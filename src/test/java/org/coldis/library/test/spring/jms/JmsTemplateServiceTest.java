@@ -25,14 +25,17 @@ public class JmsTemplateServiceTest {
 	 */
 	@Test
 	public void testDuplicateId() throws Exception {
-		this.jmsTemplateTestService.sendMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE, "message1", null, 30, null, true);
-		this.jmsTemplateTestService.sendMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE, "message2", null, 30, null, true);
-		this.jmsTemplateTestService.sendMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE, "message3", "teste2", 30, null, true);
-		this.jmsTemplateTestService.sendMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE, "message4", "teste2", 30, null, true);
-		Thread.sleep(61000);
+		this.jmsTemplateTestService.sendMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE, "message1", null, 0, 0);
+		this.jmsTemplateTestService.sendMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE, "message2", null, 0, 0);
+		this.jmsTemplateTestService.sendMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE, "message3", "teste2", 0, 0);
+		this.jmsTemplateTestService.sendMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE, "message4", "teste2", 0, 0);
+		jmsTemplateTestService.consumeMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE);
+		jmsTemplateTestService.consumeMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE);
+		jmsTemplateTestService.consumeMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE);
+		jmsTemplateTestService.consumeMessage(JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE);
 		Assertions.assertTrue(JmsTemplateTestService.ACKED_MESSAGES.contains("message1"));
 		Assertions.assertTrue(JmsTemplateTestService.ACKED_MESSAGES.contains("message2"));
-		Assertions.assertTrue(JmsTemplateTestService.ACKED_MESSAGES.contains("message3"));
+		Assertions.assertTrue(!JmsTemplateTestService.ACKED_MESSAGES.contains("message3"));
 		Assertions.assertTrue(JmsTemplateTestService.ACKED_MESSAGES.contains("message4"));
 	}
 

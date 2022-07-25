@@ -3,9 +3,11 @@ package org.coldis.library.test.spring.jms;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.jms.JMSException;
+import javax.jms.Message;
+
 import org.coldis.library.spring.jms.JmsTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,17 +43,24 @@ public class JmsTemplateTestService {
 	/**
 	 * Consumes messages.
 	 *
-	 * @param message Message.
+	 * @param  destination
+	 * @throws JMSException If the message cannot be consumed.
 	 */
 	@Transactional
-	@JmsListener(destination = JmsTemplateTestService.JMS_TEMPLATE_TEST_QUEUE)
 	public void consumeMessage(
-			final String message) {
-		JmsTemplateTestService.ACKED_MESSAGES.add(message);
+			final String destination) throws JMSException {
+		final Message message = this.jmsTemplate.receive(destination);
+		JmsTemplateTestService.ACKED_MESSAGES.add(message.getBody(String.class));
 	}
 
 	/**
 	 * Sends duplicate messages.
+	 *
+	 * @param destination
+	 * @param message
+	 * @param messageId
+	 * @param minimumDelaySeconds
+	 * @param maximumDelaySeconds
 	 */
 	@Transactional
 	public void sendMessage(
@@ -59,9 +68,8 @@ public class JmsTemplateTestService {
 			final Object message,
 			final String messageId,
 			final Integer minimumDelaySeconds,
-			final Integer maximumDelaySeconds,
-			final Boolean ignoreDuplicateIdError) {
-		this.jmsTemplateService.send(this.jmsTemplate, destination, message, messageId, minimumDelaySeconds, maximumDelaySeconds, ignoreDuplicateIdError);
+			final Integer maximumDelaySeconds) {
+		this.jmsTemplateService.send(this.jmsTemplate, destination, message, messageId, minimumDelaySeconds, maximumDelaySeconds);
 	}
 
 }
