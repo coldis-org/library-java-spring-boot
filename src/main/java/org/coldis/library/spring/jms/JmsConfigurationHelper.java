@@ -13,7 +13,6 @@ import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.destination.DestinationResolver;
-import org.springframework.util.ErrorHandler;
 import org.springframework.util.backoff.ExponentialBackOff;
 
 /**
@@ -71,33 +70,6 @@ public class JmsConfigurationHelper {
 			backOff.setMaxInterval(backoffMaxInterval);
 			jmsContainerFactory.setBackOff(backOff);
 		}
-		// Returns the container factory.
-		return jmsContainerFactory;
-	}
-
-	/**
-	 * Creates the JMS container factory.
-	 *
-	 * @param  connectionFactory      Connection factory.
-	 * @param  destinationResolver    Destination resolver.
-	 * @param  messageConverter       Message converter.
-	 * @param  backoffInitialInterval Back-off initial interval
-	 * @param  backoffMultiplier      Back-off multiplier.
-	 * @param  backoffMaxInterval     Back-off max interval.
-	 * @return                        The JMS container factory.
-	 */
-	public static DefaultJmsListenerContainerFactory createJmsTopicContainerFactory(
-			final ConnectionFactory connectionFactory,
-			final DestinationResolver destinationResolver,
-			final MessageConverter messageConverter,
-			final Long backoffInitialInterval,
-			final Double backoffMultiplier,
-			final Long backoffMaxInterval) {
-		// Creates a new container factory.
-		final DefaultJmsListenerContainerFactory jmsContainerFactory = JmsConfigurationHelper.createJmsContainerFactory(connectionFactory, destinationResolver,
-				messageConverter, backoffInitialInterval, backoffMultiplier, backoffMaxInterval);
-		jmsContainerFactory.setSubscriptionDurable(true);
-		jmsContainerFactory.setSubscriptionShared(true);
 		// Returns the container factory.
 		return jmsContainerFactory;
 	}
