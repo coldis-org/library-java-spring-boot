@@ -43,12 +43,15 @@ public class JmsTemplateTestService {
 	/**
 	 * Consumes messages.
 	 *
-	 * @param  destination
+	 * @param  destination  Destination.
+	 * @param  timeout      Consume timeout.
 	 * @throws JMSException If the message cannot be consumed.
 	 */
 	@Transactional
 	public void consumeMessage(
-			final String destination) throws JMSException {
+			final String destination,
+			final Long timeout) throws JMSException {
+		this.jmsTemplate.setReceiveTimeout(timeout);
 		final Message message = this.jmsTemplate.receive(destination);
 		JmsTemplateTestService.ACKED_MESSAGES.add(message.getBody(String.class));
 	}
