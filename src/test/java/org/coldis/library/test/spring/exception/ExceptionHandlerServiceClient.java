@@ -10,6 +10,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.coldis.library.exception.BusinessException;
 import org.coldis.library.exception.IntegrationException;
 import org.coldis.library.service.client.GenericRestServiceClient;
+import org.coldis.library.service.jms.JmsTemplateHelper;
+import org.coldis.library.service.jms.JmsMessage;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,6 +34,7 @@ import org.springframework.util.StringValueResolver;
   * Exception handler service.
   */
 @Service
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware {
 	
 	/**
@@ -44,6 +47,12 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 	 */
 	@Autowired(required = false)
 		private JmsTemplate jmsTemplate;
+	
+	/**
+	 * JMS template helper.
+	 */
+	@Autowired(required = false)
+	private JmsTemplateHelper jmsTemplateHelper;
 	
 	/**
 	 * Service client.
@@ -73,10 +82,12 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
  @param  code              Message code.
  @param  parameters        Parameters.
  @throws BusinessException Exception.
-  */
+ 
+	 * @throws BusinessException Any expected errors.
+	 */
 	public void businessExceptionService(
-			java.lang.String code,
-			java.lang.Object[] parameters) throws BusinessException {
+		java.lang.String code,
+			java.lang.Object[] parameters					) throws BusinessException {
 		// Operation parameters.
 		StringBuilder path = new StringBuilder(this.valueResolver
 				.resolveStringValue("http://localhost:9090/exception/business?"));
@@ -155,10 +166,12 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
  @param  code                 Message code.
  @param  parameters           Parameters.
  @throws IntegrationException Exception.
-  */
+ 
+	 * @throws BusinessException Any expected errors.
+	 */
 	public void integrationExceptionService(
-			java.lang.String code,
-			java.lang.Object[] parameters) throws BusinessException {
+		java.lang.String code,
+			java.lang.Object[] parameters					) throws BusinessException {
 		// Operation parameters.
 		StringBuilder path = new StringBuilder(this.valueResolver
 				.resolveStringValue("http://localhost:9090/exception/integration?"));
@@ -235,9 +248,11 @@ public class ExceptionHandlerServiceClient implements EmbeddedValueResolverAware
 	 * Test service.
 
  @param object Test object.
-  */
+ 
+	 * @throws BusinessException Any expected errors.
+	 */
 	public void constraintViolationExceptionService(
-			org.coldis.library.test.spring.exception.TestClass object) throws BusinessException {
+		org.coldis.library.test.spring.exception.TestClass object					) throws BusinessException {
 		// Operation parameters.
 		StringBuilder path = new StringBuilder(this.valueResolver
 				.resolveStringValue("http://localhost:9090/exception/constraint-violation?"));
