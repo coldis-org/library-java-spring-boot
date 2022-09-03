@@ -1,7 +1,8 @@
-package org.coldis.library.spring.controller;
+package org.coldis.library.spring.exception;
 
 import javax.validation.ConstraintViolationException;
 
+import org.coldis.library.exception.BusinessException;
 import org.coldis.library.exception.IntegrationException;
 import org.coldis.library.model.SimpleMessage;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class BusinessExceptionHandler implements ErrorHandler {
 	public void handleError(
 			final Throwable throwable) {
 		// Logs business errors.
-		if ((throwable instanceof ConstraintViolationException) || (throwable instanceof ConstraintViolationException)) {
+		if ((throwable instanceof BusinessException) || (throwable instanceof ConstraintViolationException)) {
 			BusinessExceptionHandler.LOGGER.warn("Business exception thrown and handled: " + throwable.getLocalizedMessage());
 			BusinessExceptionHandler.LOGGER.debug("Business exception thrown and handled." + throwable);
 		}

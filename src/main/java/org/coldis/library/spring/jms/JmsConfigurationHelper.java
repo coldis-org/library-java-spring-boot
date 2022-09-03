@@ -13,6 +13,7 @@ import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.destination.DestinationResolver;
+import org.springframework.util.ErrorHandler;
 import org.springframework.util.backoff.ExponentialBackOff;
 
 /**
@@ -49,9 +50,10 @@ public class JmsConfigurationHelper {
 			final ConnectionFactory connectionFactory,
 			final DestinationResolver destinationResolver,
 			final MessageConverter messageConverter,
+			final ErrorHandler errorHandler,
 			final Long backoffInitialInterval,
 			final Double backoffMultiplier,
-			final Long backoffMaxInterval) {
+			final Long backoffMaxElapsedTime) {
 		// Creates a new container factory.
 		final DefaultJmsListenerContainerFactory jmsContainerFactory = new DefaultJmsListenerContainerFactory();
 		// Sets the default configuration.
@@ -61,13 +63,16 @@ public class JmsConfigurationHelper {
 		if (messageConverter != null) {
 			jmsContainerFactory.setMessageConverter(messageConverter);
 		}
+		if (errorHandler != null) {
+			jmsContainerFactory.setErrorHandler(errorHandler);
+		}
 		jmsContainerFactory.setConnectionFactory(connectionFactory);
 		jmsContainerFactory.setSessionTransacted(true);
 		jmsContainerFactory.setAutoStartup(true);
 		jmsContainerFactory.setSessionAcknowledgeMode(AcknowledgeMode.AUTO.getMode());
-		if ((backoffInitialInterval != null) && (backoffMultiplier != null) && (backoffMaxInterval != null)) {
+		if ((backoffInitialInterval != null) && (backoffMultiplier != null) && (backoffMaxElapsedTime != null)) {
 			final ExponentialBackOff backOff = new ExponentialBackOff(backoffInitialInterval, backoffMultiplier);
-			backOff.setMaxInterval(backoffMaxInterval);
+			backOff.setMaxElapsedTime(backoffMaxElapsedTime);
 			jmsContainerFactory.setBackOff(backOff);
 		}
 		// Returns the container factory.
@@ -82,19 +87,20 @@ public class JmsConfigurationHelper {
 	 * @param  messageConverter       Message converter.
 	 * @param  backoffInitialInterval Back-off initial interval
 	 * @param  backoffMultiplier      Back-off multiplier.
-	 * @param  backoffMaxInterval     Back-off max interval.
+	 * @param  backoffMaxElapsedTime  Back-off max interval.
 	 * @return                        The JMS container factory.
 	 */
 	public static DefaultJmsListenerContainerFactory createJmsTopicContainerFactory(
 			final ConnectionFactory connectionFactory,
 			final DestinationResolver destinationResolver,
 			final MessageConverter messageConverter,
+			final ErrorHandler errorHandler,
 			final Long backoffInitialInterval,
 			final Double backoffMultiplier,
-			final Long backoffMaxInterval) {
+			final Long backoffMaxElapsedTime) {
 		// Creates a new container factory.
 		final DefaultJmsListenerContainerFactory jmsContainerFactory = JmsConfigurationHelper.createJmsContainerFactory(connectionFactory, destinationResolver,
-				messageConverter, backoffInitialInterval, backoffMultiplier, backoffMaxInterval);
+				messageConverter, errorHandler, backoffInitialInterval, backoffMultiplier, backoffMaxElapsedTime);
 		jmsContainerFactory.setSubscriptionDurable(true);
 		jmsContainerFactory.setSubscriptionShared(true);
 		// Returns the container factory.
