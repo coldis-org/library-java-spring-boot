@@ -2,6 +2,7 @@ package org.coldis.library.test.spring.jms;
 
 import javax.jms.ConnectionFactory;
 
+import org.coldis.library.spring.exception.BusinessExceptionHandler;
 import org.coldis.library.spring.jms.JmsConfigurationHelper;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,8 @@ public class JmsConfiguration {
 	@Bean
 	public DefaultJmsListenerContainerFactory createJmsContainerFactory(
 			final ConnectionFactory connectionFactory) {
-		return JmsConfigurationHelper.createJmsContainerFactory(connectionFactory, this.destinationResolver, this.messageConverter, 1000L, 3.1D, 1000L * 180L);
+		return JmsConfigurationHelper.createJmsContainerFactory(connectionFactory, this.destinationResolver, this.messageConverter,
+				new BusinessExceptionHandler(), 1000L, 3.1D, 1000L * 180L);
 	}
 
 	/**
