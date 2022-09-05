@@ -32,7 +32,7 @@ public class BusinessExceptionHandler implements ErrorHandler {
 		}
 		// Re-throws any other error.
 		else {
-			throw new IntegrationException(new SimpleMessage("business.error.handler.exception"), throwable);
+			throw new IntegrationException(new SimpleMessage(throwable.getLocalizedMessage()), throwable);
 		}
 
 	}
