@@ -67,8 +67,7 @@ public class JmsConfiguration {
 	public DefaultJmsListenerContainerFactory createJmsContainerFactory(
 			final ConnectionFactory connectionFactory) {
 		return JmsConfigurationHelper.createJmsContainerFactory(connectionFactory, this.destinationResolver, this.messageConverter,
-				new BusinessExceptionHandler(), new BusinessExceptionHandler(), 3000L,
-				5D, 1000L * 60L * 60L * 17L);
+				new BusinessExceptionHandler(), 3000L, 5D, 1000L * 60L * 60L * 17L);
 	}
 
 	/**
