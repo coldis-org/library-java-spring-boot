@@ -3,11 +3,10 @@ package org.coldis.library.spring.exception;
 import javax.validation.ConstraintViolationException;
 
 import org.coldis.library.exception.BusinessException;
-import org.coldis.library.exception.IntegrationException;
-import org.coldis.library.model.SimpleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ErrorHandler;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * Logs business errors.
@@ -41,7 +40,7 @@ public class BusinessExceptionHandler implements ErrorHandler {
 		}
 		// Re-throws any other error.
 		else {
-			throw new IntegrationException(new SimpleMessage(throwable.getLocalizedMessage()), throwable);
+			ReflectionUtils.rethrowRuntimeException(throwable);
 		}
 
 	}
