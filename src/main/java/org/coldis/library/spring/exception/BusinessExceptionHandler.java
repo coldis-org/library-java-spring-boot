@@ -26,7 +26,16 @@ public class BusinessExceptionHandler implements ErrorHandler {
 	public void handleError(
 			final Throwable throwable) {
 		// Logs business errors.
-		if ((throwable instanceof BusinessException) || (throwable instanceof ConstraintViolationException)) {
+		Throwable actualThrowable = throwable;
+		boolean businessException = false;
+		while (actualThrowable != null) {
+			if ((actualThrowable instanceof BusinessException) || (actualThrowable instanceof ConstraintViolationException)) {
+				businessException = true;
+				break;
+			}
+			actualThrowable = throwable.getCause();
+		}
+		if (businessException) {
 			BusinessExceptionHandler.LOGGER.warn("Business exception thrown and handled: " + throwable.getLocalizedMessage());
 			BusinessExceptionHandler.LOGGER.debug("Business exception thrown and handled." + throwable);
 		}

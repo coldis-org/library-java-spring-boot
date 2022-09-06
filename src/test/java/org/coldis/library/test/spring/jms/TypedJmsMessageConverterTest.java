@@ -2,6 +2,7 @@ package org.coldis.library.test.spring.jms;
 
 import java.util.List;
 
+import org.coldis.library.exception.BusinessException;
 import org.coldis.library.serialization.ObjectMapperHelper;
 import org.coldis.library.test.TestHelper;
 import org.junit.jupiter.api.Assertions;
@@ -19,16 +20,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * Typed JMS message converter test.
  */
 @EnableJms
-@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT,
-properties = { "org.coldis.configuration.jms-message-converter-default-enabled=false",
-"org.coldis.configuration.jms-message-converter-typed-enabled=true" })
+@SpringBootTest(
+		webEnvironment = WebEnvironment.DEFINED_PORT,
+		properties = { "org.coldis.configuration.jms-message-converter-default-enabled=false",
+				"org.coldis.configuration.jms-message-converter-typed-enabled=true" }
+)
 public class TypedJmsMessageConverterTest {
 
 	/**
 	 * Test data.
 	 */
-	private static final List<DtoTestObjectDto> TEST_DATA = List.of(
-			new DtoTestObjectDto().withId(1L).withTest7(4).withTest88(new int[] { 1, 2 }).withTest9(46),
+	private static final List<DtoTestObjectDto> TEST_DATA = List.of(new DtoTestObjectDto().withId(1L).withTest7(4).withTest88(new int[] { 1, 2 }).withTest9(46),
 			new DtoTestObjectDto().withId(2L).withTest7(5).withTest88(new int[] { 3, 4 }).withTest9(423),
 			new DtoTestObjectDto().withId(3L).withTest7(6).withTest88(new int[] { 5, 6 }).withTest9(2342));
 
@@ -61,10 +63,16 @@ public class TypedJmsMessageConverterTest {
 	/**
 	 * Consumes a JMS test message.
 	 *
-	 * @param message Message.
+	 * @param  message           Message.
+	 * @throws BusinessException
 	 */
-	@JmsListener(destination = "jmsTest")
-	public void consumeMessage(final DtoTestObject message) {
+	@JmsListener(
+			destination = "jmsTest",
+			containerFactory = "testJmsContainerFactory"
+	)
+	public void consumeMessage(
+			final DtoTestObject message) throws BusinessException {
+		// throw new BusinessException();
 		TypedJmsMessageConverterTest.currentTestMessage = message;
 	}
 
@@ -81,9 +89,8 @@ public class TypedJmsMessageConverterTest {
 			this.jmsTemplate.convertAndSend("jmsTest", testData);
 			// Asserts that the message is correctly converted.
 			Assertions.assertTrue(TestHelper.waitUntilValid(this::getCurrentTestMessage,
-					message -> testData.equals(
-							ObjectMapperHelper.convert(this.objectMapper, message, DtoTestObjectDto.class, true)),
-					TestHelper.LONG_WAIT, TestHelper.SHORT_WAIT));
+					message -> testData.equals(ObjectMapperHelper.convert(this.objectMapper, message, DtoTestObjectDto.class, true)), TestHelper.LONG_WAIT,
+					TestHelper.SHORT_WAIT));
 		}
 
 	}

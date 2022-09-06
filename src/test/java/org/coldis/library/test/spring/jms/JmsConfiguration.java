@@ -63,7 +63,7 @@ public class JmsConfiguration {
 	 * @param  connectionFactory Connection factory.
 	 * @return                   The JMS container factory.
 	 */
-	@Bean
+	@Bean(name = "testJmsContainerFactory")
 	public DefaultJmsListenerContainerFactory createJmsContainerFactory(
 			final ConnectionFactory connectionFactory) {
 		return JmsConfigurationHelper.createJmsContainerFactory(connectionFactory, this.destinationResolver, this.messageConverter,
