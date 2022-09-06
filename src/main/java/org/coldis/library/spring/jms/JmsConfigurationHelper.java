@@ -1,6 +1,7 @@
 package org.coldis.library.spring.jms;
 
 import javax.jms.ConnectionFactory;
+import javax.jms.ExceptionListener;
 
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -13,7 +14,6 @@ import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.destination.DestinationResolver;
-import org.springframework.util.ErrorHandler;
 import org.springframework.util.backoff.ExponentialBackOff;
 
 /**
@@ -41,17 +41,18 @@ public class JmsConfigurationHelper {
 	 * @param  connectionFactory      Connection factory.
 	 * @param  destinationResolver    Destination resolver.
 	 * @param  messageConverter       Message converter.
-	 * @param  errorHandler           Error handler.
+	 * @param  exceptionListener      Error handler.
 	 * @param  backoffInitialInterval Back-off initial interval
 	 * @param  backoffMultiplier      Back-off multiplier.
 	 * @param  backoffMaxInterval     Back-off max interval.
 	 * @return                        The JMS container factory.
 	 */
+	@Deprecated
 	public static DefaultJmsListenerContainerFactory createJmsContainerFactory(
 			final ConnectionFactory connectionFactory,
 			final DestinationResolver destinationResolver,
 			final MessageConverter messageConverter,
-			final ErrorHandler errorHandler,
+			final ExceptionListener exceptionListener,
 			final Long backoffInitialInterval,
 			final Double backoffMultiplier,
 			final Long backoffMaxElapsedTime) {
@@ -63,9 +64,6 @@ public class JmsConfigurationHelper {
 		}
 		if (messageConverter != null) {
 			jmsContainerFactory.setMessageConverter(messageConverter);
-		}
-		if (errorHandler != null) {
-			jmsContainerFactory.setErrorHandler(errorHandler);
 		}
 		jmsContainerFactory.setConnectionFactory(connectionFactory);
 		jmsContainerFactory.setSessionTransacted(true);
@@ -91,7 +89,6 @@ public class JmsConfigurationHelper {
 	 * @param  backoffMaxInterval     Back-off max interval.
 	 * @return                        The JMS container factory.
 	 */
-	@Deprecated
 	public static DefaultJmsListenerContainerFactory createJmsContainerFactory(
 			final ConnectionFactory connectionFactory,
 			final DestinationResolver destinationResolver,
@@ -109,7 +106,7 @@ public class JmsConfigurationHelper {
 	 * @param  connectionFactory      Connection factory.
 	 * @param  destinationResolver    Destination resolver.
 	 * @param  messageConverter       Message converter.
-	 * @param  errorHandler           Error handler.
+	 * @param  exceptionListener      Error handler.
 	 * @param  backoffInitialInterval Back-off initial interval
 	 * @param  backoffMultiplier      Back-off multiplier.
 	 * @param  backoffMaxElapsedTime  Back-off max interval.
@@ -119,13 +116,13 @@ public class JmsConfigurationHelper {
 			final ConnectionFactory connectionFactory,
 			final DestinationResolver destinationResolver,
 			final MessageConverter messageConverter,
-			final ErrorHandler errorHandler,
+			final ExceptionListener exceptionListener,
 			final Long backoffInitialInterval,
 			final Double backoffMultiplier,
 			final Long backoffMaxElapsedTime) {
 		// Creates a new container factory.
 		final DefaultJmsListenerContainerFactory jmsContainerFactory = JmsConfigurationHelper.createJmsContainerFactory(connectionFactory, destinationResolver,
-				messageConverter, errorHandler, backoffInitialInterval, backoffMultiplier, backoffMaxElapsedTime);
+				messageConverter, exceptionListener, backoffInitialInterval, backoffMultiplier, backoffMaxElapsedTime);
 		jmsContainerFactory.setSubscriptionDurable(true);
 		jmsContainerFactory.setSubscriptionShared(true);
 		// Returns the container factory.

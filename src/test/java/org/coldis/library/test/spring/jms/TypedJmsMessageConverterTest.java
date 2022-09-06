@@ -72,7 +72,6 @@ public class TypedJmsMessageConverterTest {
 	)
 	public void consumeMessage(
 			final DtoTestObject message) throws BusinessException {
-		// throw new BusinessException();
 		TypedJmsMessageConverterTest.currentTestMessage = message;
 	}
 

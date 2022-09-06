@@ -11,12 +11,12 @@ import org.springframework.util.ReflectionUtils;
 /**
  * Logs business errors.
  */
-public class BusinessExceptionHandler implements ErrorHandler {
+public class BusinessErrorHandler implements ErrorHandler {
 
 	/**
 	 * Logger.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(BusinessExceptionHandler.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(BusinessErrorHandler.class);
 
 	/**
 	 * @see org.springframework.util.ErrorHandler#handleError(java.lang.Throwable)
@@ -35,8 +35,8 @@ public class BusinessExceptionHandler implements ErrorHandler {
 			actualThrowable = throwable.getCause();
 		}
 		if (businessException) {
-			BusinessExceptionHandler.LOGGER.warn("Business exception thrown and handled: " + throwable.getLocalizedMessage());
-			BusinessExceptionHandler.LOGGER.debug("Business exception thrown and handled." + throwable);
+			BusinessErrorHandler.LOGGER.warn("Business exception thrown: " + throwable.getLocalizedMessage());
+			BusinessErrorHandler.LOGGER.debug("Business exception thrown." + throwable);
 		}
 		// Re-throws any other error.
 		else {
