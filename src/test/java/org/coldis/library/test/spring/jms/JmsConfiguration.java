@@ -66,8 +66,8 @@ public class JmsConfiguration {
 	@Bean(name = "testJmsContainerFactory")
 	public DefaultJmsListenerContainerFactory createJmsContainerFactory(
 			final ConnectionFactory connectionFactory) {
-		return JmsConfigurationHelper.createJmsContainerFactory(connectionFactory, this.destinationResolver, this.messageConverter,
-				new JmsBusinessExceptionListener(), 3000L, 5D, 1000L * 60L * 60L * 17L);
+		return JmsConfigurationHelper.createJmsContainerFactory(connectionFactory, this.destinationResolver, this.messageConverter, 3000L, 5D,
+				1000L * 60L * 60L * 17L);
 	}
 
 	/**
