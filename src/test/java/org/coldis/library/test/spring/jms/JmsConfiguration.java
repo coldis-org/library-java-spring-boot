@@ -2,7 +2,6 @@ package org.coldis.library.test.spring.jms;
 
 import javax.jms.ConnectionFactory;
 
-import org.coldis.library.spring.jms.JmsBusinessExceptionListener;
 import org.coldis.library.spring.jms.JmsConfigurationHelper;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
