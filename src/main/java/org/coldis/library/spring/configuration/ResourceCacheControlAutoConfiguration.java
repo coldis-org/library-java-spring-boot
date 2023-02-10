@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * Cache control auto configuration.
  */
 @Configuration
-public class CacheControlAutoConfiguration implements WebMvcConfigurer {
+public class ResourceCacheControlAutoConfiguration implements WebMvcConfigurer {
 
 	/**
 	 * Resource properties.
@@ -30,9 +30,9 @@ public class CacheControlAutoConfiguration implements WebMvcConfigurer {
 	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurer#addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry)
 	 */
 	@Override
-	public void addResourceHandlers(final ResourceHandlerRegistry registry) {
-		registry.addResourceHandler(this.resourcesNotToCache)
-		.addResourceLocations(this.resourceProperties.getStaticLocations())
-		.setCacheControl(CacheControl.noStore().mustRevalidate()).setCachePeriod(0);
+	public void addResourceHandlers(
+			final ResourceHandlerRegistry registry) {
+		registry.addResourceHandler(this.resourcesNotToCache).addResourceLocations(this.resourceProperties.getStaticLocations())
+				.setCacheControl(CacheControl.noStore().mustRevalidate()).setCachePeriod(0);
 	}
 }
