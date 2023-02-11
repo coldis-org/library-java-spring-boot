@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -56,14 +57,22 @@ public class LocalCacheConfiguration {
 	private CaffeineCacheManager dayExpirationLocalCacheManager;
 
 	/**
+	 * Cache manager.
+	 */
+	private CaffeineCacheManager daysExpirationLocalCacheManager;
+
+	/**
 	 * Short lived cache.
 	 *
 	 * @return Short lived cache.
 	 */
 	@Bean
-	public CacheManager millisExpirationLocalCacheManager() {
+	public CacheManager millisExpirationLocalCacheManager(
+			@Value(value = "${org.coldis.configuration.cache.millis-expiration:3100}")
+			final Long expiration) {
 		this.millisExpirationLocalCacheManager = new CaffeineCacheManager();
-		this.millisExpirationLocalCacheManager.setCaffeine(Caffeine.newBuilder().recordStats().expireAfterWrite(Duration.ofMillis(3100)).maximumSize(13791));
+		this.millisExpirationLocalCacheManager
+				.setCaffeine(Caffeine.newBuilder().recordStats().expireAfterWrite(Duration.ofMillis(expiration)).maximumSize(13791));
 		return this.millisExpirationLocalCacheManager;
 	}
 
@@ -73,9 +82,12 @@ public class LocalCacheConfiguration {
 	 * @return Short lived cache.
 	 */
 	@Bean
-	public CacheManager secondsExpirationLocalCacheManager() {
+	public CacheManager secondsExpirationLocalCacheManager(
+			@Value(value = "${org.coldis.configuration.cache.seconds-expiration:23}")
+			final Long expiration) {
 		this.secondsExpirationLocalCacheManager = new CaffeineCacheManager();
-		this.secondsExpirationLocalCacheManager.setCaffeine(Caffeine.newBuilder().recordStats().expireAfterWrite(Duration.ofSeconds(23)).maximumSize(13791));
+		this.secondsExpirationLocalCacheManager
+				.setCaffeine(Caffeine.newBuilder().recordStats().expireAfterWrite(Duration.ofSeconds(expiration)).maximumSize(13791));
 		return this.secondsExpirationLocalCacheManager;
 	}
 
@@ -86,9 +98,12 @@ public class LocalCacheConfiguration {
 	 */
 	@Bean
 	@Primary
-	public CacheManager minutesExpirationLocalCacheManager() {
+	public CacheManager minutesExpirationLocalCacheManager(
+			@Value(value = "${org.coldis.configuration.cache.minutes-expiration:11}")
+			final Long expiration) {
 		this.minutesExpirationLocalCacheManager = new CaffeineCacheManager();
-		this.minutesExpirationLocalCacheManager.setCaffeine(Caffeine.newBuilder().recordStats().expireAfterWrite(Duration.ofMinutes(11)).maximumSize(13791));
+		this.minutesExpirationLocalCacheManager
+				.setCaffeine(Caffeine.newBuilder().recordStats().expireAfterWrite(Duration.ofMinutes(expiration)).maximumSize(13791));
 		return this.minutesExpirationLocalCacheManager;
 	}
 
@@ -98,9 +113,12 @@ public class LocalCacheConfiguration {
 	 * @return Long lived cache.
 	 */
 	@Bean
-	public CacheManager hoursExpirationLocalCacheManager() {
+	public CacheManager hoursExpirationLocalCacheManager(
+			@Value(value = "${org.coldis.configuration.cache.hours-expiration:3}")
+			final Long expiration) {
 		this.hoursExpirationLocalCacheManager = new CaffeineCacheManager();
-		this.hoursExpirationLocalCacheManager.setCaffeine(Caffeine.newBuilder().recordStats().expireAfterWrite(Duration.ofHours(3)).maximumSize(13791));
+		this.hoursExpirationLocalCacheManager
+				.setCaffeine(Caffeine.newBuilder().recordStats().expireAfterWrite(Duration.ofHours(expiration)).maximumSize(13791));
 		return this.hoursExpirationLocalCacheManager;
 	}
 
@@ -110,10 +128,26 @@ public class LocalCacheConfiguration {
 	 * @return Long lived cache.
 	 */
 	@Bean
-	public CacheManager dayExpirationLocalCacheManager() {
+	public CacheManager dayExpirationLocalCacheManager(
+			@Value(value = "${org.coldis.configuration.cache.day-expiration:1}")
+			final Long expiration) {
 		this.dayExpirationLocalCacheManager = new CaffeineCacheManager();
-		this.dayExpirationLocalCacheManager.setCaffeine(Caffeine.newBuilder().recordStats().expireAfterWrite(Duration.ofDays(1)).maximumSize(13791));
+		this.dayExpirationLocalCacheManager.setCaffeine(Caffeine.newBuilder().recordStats().expireAfterWrite(Duration.ofDays(expiration)).maximumSize(13791));
 		return this.dayExpirationLocalCacheManager;
+	}
+
+	/**
+	 * Long lived cache.
+	 *
+	 * @return Long lived cache.
+	 */
+	@Bean
+	public CacheManager daysExpirationLocalCacheManager(
+			@Value(value = "${org.coldis.configuration.cache.days-expiration:5}")
+			final Long expiration) {
+		this.daysExpirationLocalCacheManager = new CaffeineCacheManager();
+		this.daysExpirationLocalCacheManager.setCaffeine(Caffeine.newBuilder().recordStats().expireAfterWrite(Duration.ofDays(expiration)).maximumSize(13791));
+		return this.daysExpirationLocalCacheManager;
 	}
 
 	/**
@@ -141,6 +175,10 @@ public class LocalCacheConfiguration {
 				.forEach(name -> LocalCacheConfiguration.LOGGER.debug("Cache '" + name + "' estimated size in '"
 						+ ((CaffeineCache) this.dayExpirationLocalCacheManager.getCache(name)).getNativeCache().estimatedSize() + "' and stats: "
 						+ ((CaffeineCache) this.dayExpirationLocalCacheManager.getCache(name)).getNativeCache().stats().toString()));
+		this.daysExpirationLocalCacheManager.getCacheNames()
+				.forEach(name -> LocalCacheConfiguration.LOGGER.debug("Cache '" + name + "' estimated size in '"
+						+ ((CaffeineCache) this.daysExpirationLocalCacheManager.getCache(name)).getNativeCache().estimatedSize() + "' and stats: "
+						+ ((CaffeineCache) this.daysExpirationLocalCacheManager.getCache(name)).getNativeCache().stats().toString()));
 	}
 
 }

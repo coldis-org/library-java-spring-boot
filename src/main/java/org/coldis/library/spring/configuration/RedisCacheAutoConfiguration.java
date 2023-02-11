@@ -4,13 +4,13 @@ import java.time.Duration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -63,6 +63,11 @@ public class RedisCacheAutoConfiguration {
 	private RedisCacheManager dayExpirationCentralCacheManager;
 
 	/**
+	 * Cache manager.
+	 */
+	private RedisCacheManager daysExpirationCentralCacheManager;
+
+	/**
 	 * Default constructor.
 	 */
 	public RedisCacheAutoConfiguration(final ObjectMapper objectMapper) {
@@ -76,9 +81,11 @@ public class RedisCacheAutoConfiguration {
 	 */
 	@Bean
 	public CacheManager millisExpirationCentralCacheManager(
-			final RedisConnectionFactory redisConnectionFactory) {
+			final RedisConnectionFactory redisConnectionFactory,
+			@Value(value = "${org.coldis.configuration.cache.millis-expiration:3100}")
+			final Long expiration) {
 		this.millisExpirationCentralCacheManager = RedisCacheManager.builder(redisConnectionFactory)
-				.cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMillis(3100)).serializeValuesWith(this.serializationPair))
+				.cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMillis(expiration)).serializeValuesWith(this.serializationPair))
 				.build();
 		return this.millisExpirationCentralCacheManager;
 	}
@@ -90,9 +97,12 @@ public class RedisCacheAutoConfiguration {
 	 */
 	@Bean
 	public CacheManager secondsExpirationCentralCacheManager(
-			final RedisConnectionFactory redisConnectionFactory) {
+			final RedisConnectionFactory redisConnectionFactory,
+			@Value(value = "${org.coldis.configuration.cache.seconds-expiration:23}")
+			final Long expiration) {
 		this.secondsExpirationCentralCacheManager = RedisCacheManager.builder(redisConnectionFactory)
-				.cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(23)).serializeValuesWith(this.serializationPair))
+				.cacheDefaults(
+						RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofSeconds(expiration)).serializeValuesWith(this.serializationPair))
 				.build();
 		return this.secondsExpirationCentralCacheManager;
 	}
@@ -104,9 +114,12 @@ public class RedisCacheAutoConfiguration {
 	 */
 	@Bean
 	public CacheManager minutesExpirationCentralCacheManager(
-			final RedisConnectionFactory redisConnectionFactory) {
+			final RedisConnectionFactory redisConnectionFactory,
+			@Value(value = "${org.coldis.configuration.cache.minutes-expiration:11}")
+			final Long expiration) {
 		this.minutesExpirationCentralCacheManager = RedisCacheManager.builder(redisConnectionFactory)
-				.cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(11)).serializeValuesWith(this.serializationPair))
+				.cacheDefaults(
+						RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(expiration)).serializeValuesWith(this.serializationPair))
 				.build();
 		return this.minutesExpirationCentralCacheManager;
 	}
@@ -118,9 +131,12 @@ public class RedisCacheAutoConfiguration {
 	 */
 	@Bean
 	public CacheManager hoursExpirationCentralCacheManager(
-			final RedisConnectionFactory redisConnectionFactory) {
+			final RedisConnectionFactory redisConnectionFactory,
+			@Value(value = "${org.coldis.configuration.cache.hours-expiration:3}")
+			final Long expiration) {
 		this.hoursExpirationCentralCacheManager = RedisCacheManager.builder(redisConnectionFactory)
-				.cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(3)).serializeValuesWith(this.serializationPair)).build();
+				.cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(expiration)).serializeValuesWith(this.serializationPair))
+				.build();
 		return this.hoursExpirationCentralCacheManager;
 	}
 
@@ -131,10 +147,29 @@ public class RedisCacheAutoConfiguration {
 	 */
 	@Bean
 	public CacheManager dayExpirationCentralCacheManager(
-			final RedisConnectionFactory redisConnectionFactory) {
+			final RedisConnectionFactory redisConnectionFactory,
+			@Value(value = "${org.coldis.configuration.cache.day-expiration:1}")
+			final Long expiration) {
 		this.dayExpirationCentralCacheManager = RedisCacheManager.builder(redisConnectionFactory)
-				.cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(1)).serializeValuesWith(this.serializationPair)).build();
+				.cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(expiration)).serializeValuesWith(this.serializationPair))
+				.build();
 		return this.dayExpirationCentralCacheManager;
+	}
+
+	/**
+	 * Long lived cache.
+	 *
+	 * @return Long lived cache.
+	 */
+	@Bean
+	public CacheManager daysExpirationCentralCacheManager(
+			final RedisConnectionFactory redisConnectionFactory,
+			@Value(value = "${org.coldis.configuration.cache.days-expiration:5}")
+			final Long expiration) {
+		this.daysExpirationCentralCacheManager = RedisCacheManager.builder(redisConnectionFactory)
+				.cacheDefaults(RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofDays(expiration)).serializeValuesWith(this.serializationPair))
+				.build();
+		return this.daysExpirationCentralCacheManager;
 	}
 
 }
