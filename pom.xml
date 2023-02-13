@@ -7,7 +7,7 @@
 	</parent>
 	<groupId>org.coldis.library</groupId>
 	<artifactId>spring-boot</artifactId>
-	<version>1.0.23-SNAPSHOT</version>
+	<version>1.0.23</version>
 	<packaging>jar</packaging>
 	<name>Spring boot utilities</name>
 	<description>Java Spring Boot utilities.</description>
@@ -30,7 +30,7 @@
 		<url>https://github.com/coldis-org/library-java-spring-boot</url>
 		<connection>scm:git:https://github.com/coldis-org/library-java-spring-boot.git</connection>
 		<developerConnection>scm:git:git@github.com:coldis-org/library-java-spring-boot.git</developerConnection>
-		<tag>spring-boot-1.0.20</tag>
+		<tag>spring-boot-1.0.23</tag>
 	</scm>
 	<dependencies>
 		<dependency>
