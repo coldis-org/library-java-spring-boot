@@ -1,7 +1,9 @@
 package org.coldis.library.spring.configuration;
 
 import java.time.Duration;
+import java.util.Arrays;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,8 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator.Builder;
 
 /**
  * Cache configuration.
@@ -80,7 +84,10 @@ public class RedisCacheAutoConfiguration {
 	 */
 	public RedisCacheAutoConfiguration() {
 		final ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
-		objectMapper.activateDefaultTypingAsProperty(objectMapper.getPolymorphicTypeValidator(), DefaultTyping.NON_FINAL, "typeName");
+		final Builder polymorphicTypeValidatorBuilder = BasicPolymorphicTypeValidator.builder();
+		Arrays.stream(ArrayUtils.add(this.jsonTypePackages, DefaultAutoConfiguration.BASE_PACKAGE))
+				.forEach(packageName -> polymorphicTypeValidatorBuilder.allowIfSubType(packageName + "."));
+		objectMapper.activateDefaultTypingAsProperty(polymorphicTypeValidatorBuilder.build(), DefaultTyping.NON_FINAL, "typeName");
 		this.serializationPair = SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
 	}
 

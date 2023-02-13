@@ -27,14 +27,33 @@ public class CacheTest {
 	 */
 	@Test
 	public void testCentralCache() throws Exception {
-		final Integer attr1 = this.cachedService.getFromCentralCache().getAttribute();
-		Assertions.assertEquals(attr1, this.cachedService.getFromCentralCache().getAttribute());
-		Assertions.assertEquals(attr1, this.cachedService.getFromCentralCache().getAttribute());
-		Assertions.assertEquals(attr1, this.cachedService.getFromCentralCache().getAttribute());
-		Thread.sleep(23 * 1000);
-		Assertions.assertEquals(attr1 + 1, this.cachedService.getFromCentralCache().getAttribute());
-		Assertions.assertEquals(attr1 + 1, this.cachedService.getFromCentralCache().getAttribute());
-		Assertions.assertEquals(attr1 + 1, this.cachedService.getFromCentralCache().getAttribute());
+//		final Integer attr1 = this.cachedService.getFromCentralCache1();
+//		Assertions.assertEquals(attr1, this.cachedService.getFromCentralCache1());
+//		Assertions.assertEquals(attr1, this.cachedService.getFromCentralCache1());
+//		Assertions.assertEquals(attr1, this.cachedService.getFromCentralCache1());
+//		Thread.sleep(23 * 1000);
+//		Assertions.assertEquals(attr1 + 1, this.cachedService.getFromCentralCache1());
+//		Assertions.assertEquals(attr1 + 1, this.cachedService.getFromCentralCache1());
+//		Assertions.assertEquals(attr1 + 1, this.cachedService.getFromCentralCache1());
+
+		Integer attr2 = this.cachedService.getFromCentralCache2().getAttribute();
+		Assertions.assertEquals(attr2, this.cachedService.getFromCentralCache2().getAttribute());
+		Assertions.assertEquals(attr2, this.cachedService.getFromCentralCache2().getAttribute());
+		Assertions.assertEquals(attr2, this.cachedService.getFromCentralCache2().getAttribute());
+		Thread.sleep(23 * 2000);
+		Assertions.assertEquals(attr2 + 1, this.cachedService.getFromCentralCache2().getAttribute());
+		Assertions.assertEquals(attr2 + 1, this.cachedService.getFromCentralCache2().getAttribute());
+		Assertions.assertEquals(attr2 + 1, this.cachedService.getFromCentralCache2().getAttribute());
+
+		Integer attr3 = this.cachedService.getFromCentralCache3().intValue();
+		Assertions.assertEquals(attr3, this.cachedService.getFromCentralCache3().intValue());
+		Assertions.assertEquals(attr3, this.cachedService.getFromCentralCache3().intValue());
+		Assertions.assertEquals(attr3, this.cachedService.getFromCentralCache3().intValue());
+		Thread.sleep(23 * 3000);
+		Assertions.assertEquals(attr3 + 1, this.cachedService.getFromCentralCache3().intValue());
+		Assertions.assertEquals(attr3 + 1, this.cachedService.getFromCentralCache3().intValue());
+		Assertions.assertEquals(attr3 + 1, this.cachedService.getFromCentralCache3().intValue());
+
 	}
 
 	/**
@@ -44,14 +63,32 @@ public class CacheTest {
 	 */
 	@Test
 	public void testLocalCache() throws Exception {
-		final Integer attr2 = this.cachedService.getFromLocalCache();
-		Assertions.assertEquals(attr2, this.cachedService.getFromLocalCache());
-		Assertions.assertEquals(attr2, this.cachedService.getFromLocalCache());
-		Assertions.assertEquals(attr2, this.cachedService.getFromLocalCache());
+		final Integer attr1 = this.cachedService.getFromLocalCache1();
+		Assertions.assertEquals(attr1, this.cachedService.getFromLocalCache1());
+		Assertions.assertEquals(attr1, this.cachedService.getFromLocalCache1());
+		Assertions.assertEquals(attr1, this.cachedService.getFromLocalCache1());
 		Thread.sleep(23 * 1000);
-		Assertions.assertEquals(attr2 + 1, this.cachedService.getFromLocalCache());
-		Assertions.assertEquals(attr2 + 1, this.cachedService.getFromLocalCache());
-		Assertions.assertEquals(attr2 + 1, this.cachedService.getFromLocalCache());
+		Assertions.assertEquals(attr1 + 1, this.cachedService.getFromLocalCache1());
+		Assertions.assertEquals(attr1 + 1, this.cachedService.getFromLocalCache1());
+		Assertions.assertEquals(attr1 + 1, this.cachedService.getFromLocalCache1());
+
+		Integer attr2 = this.cachedService.getFromLocalCache2().getAttribute();
+		Assertions.assertEquals(attr2, this.cachedService.getFromLocalCache2().getAttribute());
+		Assertions.assertEquals(attr2, this.cachedService.getFromLocalCache2().getAttribute());
+		Assertions.assertEquals(attr2, this.cachedService.getFromLocalCache2().getAttribute());
+		Thread.sleep(23 * 2000);
+		Assertions.assertEquals(attr2 + 1, this.cachedService.getFromLocalCache2().getAttribute());
+		Assertions.assertEquals(attr2 + 1, this.cachedService.getFromLocalCache2().getAttribute());
+		Assertions.assertEquals(attr2 + 1, this.cachedService.getFromLocalCache2().getAttribute());
+
+		Integer attr3 = this.cachedService.getFromLocalCache3().intValue();
+		Assertions.assertEquals(attr3, this.cachedService.getFromLocalCache3().intValue());
+		Assertions.assertEquals(attr3, this.cachedService.getFromLocalCache3().intValue());
+		Assertions.assertEquals(attr3, this.cachedService.getFromLocalCache3().intValue());
+		Thread.sleep(23 * 3000);
+		Assertions.assertEquals(attr3 + 1, this.cachedService.getFromLocalCache3().intValue());
+		Assertions.assertEquals(attr3 + 1, this.cachedService.getFromLocalCache3().intValue());
+		Assertions.assertEquals(attr3 + 1, this.cachedService.getFromLocalCache3().intValue());
 	}
 
 }
