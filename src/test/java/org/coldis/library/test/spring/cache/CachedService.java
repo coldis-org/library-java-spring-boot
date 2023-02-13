@@ -25,12 +25,12 @@ public class CachedService {
 	 * @return The aTTR_1.
 	 */
 	@Cacheable(
-			cacheManager = "secondsExpirationLocalCacheManager",
-			value = "cachedService-getAttr1"
+			cacheManager = "secondsExpirationCentralCacheManager",
+			value = "cachedService-getFromCentralCache"
 	)
-	public Integer getAttr1() {
+	public CacheSimpleObject getFromCentralCache() {
 		CachedService.ATTR_1++;
-		return CachedService.ATTR_1;
+		return new CacheSimpleObject(CachedService.ATTR_1);
 	}
 
 	/**
@@ -39,10 +39,10 @@ public class CachedService {
 	 * @return The aTTR_2.
 	 */
 	@Cacheable(
-			cacheManager = "secondsExpirationCentralCacheManager",
-			value = "cachedService-getAttr2"
+			cacheManager = "secondsExpirationLocalCacheManager",
+			value = "cachedService-getFromLocalCache"
 	)
-	public Integer getAttr2() {
+	public Integer getFromLocalCache() {
 		CachedService.ATTR_2++;
 		return CachedService.ATTR_2;
 	}
