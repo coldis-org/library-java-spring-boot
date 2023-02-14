@@ -1,9 +1,9 @@
 package org.coldis.library.spring.configuration;
 
 import java.time.Duration;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.coldis.library.serialization.ObjectMapperHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +21,13 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTypeResolverBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator.Builder;
+import com.fasterxml.jackson.databind.jsontype.TypeResolverBuilder;
 
 /**
  * Cache configuration.
@@ -43,7 +46,7 @@ public class RedisCacheAutoConfiguration {
 	 * JSON type packages.
 	 */
 	@Value(value = "#{'${org.coldis.configuration.base-package}'.split(',')}")
-	private String[] jsonTypePackages;
+	private List<String> jsonTypePackages;
 
 	/**
 	 * Serialization pair.
@@ -84,12 +87,22 @@ public class RedisCacheAutoConfiguration {
 	 * Default constructor.
 	 */
 	public RedisCacheAutoConfiguration(final Jackson2ObjectMapperBuilder builder) {
-		final ObjectMapper objectMapper = builder.build();
+		final ObjectMapper objectMapper time= builder.build();
 		objectMapper.registerModule(ObjectMapperHelper.getDateTimeModule());
 		final Builder polymorphicTypeValidatorBuilder = BasicPolymorphicTypeValidator.builder();
-		Arrays.stream(ArrayUtils.add(this.jsonTypePackages, DefaultAutoConfiguration.BASE_PACKAGE))
-				.forEach(packageName -> polymorphicTypeValidatorBuilder.allowIfSubType(packageName + "."));
+		final List<String> packages = new ArrayList<>();
+		packages.addAll(this.jsonTypePackages);
+		packages.add(DefaultAutoConfiguration.BASE_PACKAGE);
+		packages.add("java.lang");
+		packages.add("java.time");
+		packages.add("java.util");
+		packages.stream().forEach(packageName -> polymorphicTypeValidatorBuilder.allowIfSubType(packageName + "."));
 		objectMapper.activateDefaultTypingAsProperty(polymorphicTypeValidatorBuilder.build(), DefaultTyping.NON_FINAL, "typeName");
+		TypeResolverBuilder<?> typer = DefaultTypeResolverBuilder.construct(DefaultTyping.NON_FINAL, polymorphicTypeValidatorBuilder.build());
+		typer = typer.init(JsonTypeInfo.Id.CLASS, null);
+		typer = typer.inclusion(JsonTypeInfo.As.PROPERTY);
+		typer = typer.typeProperty("typeName");
+		objectMapper.setDefaultTyping(typer);
 		this.serializationPair = SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(objectMapper));
 	}
 
