@@ -83,7 +83,7 @@ public class RedisCacheAutoConfiguration {
 	public RedisCacheAutoConfiguration(final Jackson2ObjectMapperBuilder builder) {
 		final ObjectMapper objectMapper = builder.build();
 		objectMapper.registerModule(ObjectMapperHelper.getDateTimeModule());
-		GenericJackson2JsonRedisSerializer.registerNullValueSerializer(objectMapper, "typeName"); - 
+		GenericJackson2JsonRedisSerializer.registerNullValueSerializer(objectMapper, "typeName");
 		objectMapper.enableDefaultTypingAsProperty(DefaultTyping.NON_FINAL, "typeName");
 		final GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
 		this.serializationPair = SerializationPair.fromSerializer(serializer);
