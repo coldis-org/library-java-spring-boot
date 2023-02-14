@@ -3,6 +3,7 @@ package org.coldis.library.spring.configuration;
 import java.time.Duration;
 import java.util.List;
 
+import org.coldis.library.serialization.ObjectMapperHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,9 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 
 /**
  * Cache configuration.
@@ -76,8 +80,13 @@ public class RedisCacheAutoConfiguration {
 	/**
 	 * Default constructor.
 	 */
-	public RedisCacheAutoConfiguration() {
-		this.serializationPair = SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer("typeName"));
+	public RedisCacheAutoConfiguration(final Jackson2ObjectMapperBuilder builder) {
+		final ObjectMapper objectMapper = builder.build();
+		objectMapper.registerModule(ObjectMapperHelper.getDateTimeModule());
+		GenericJackson2JsonRedisSerializer.registerNullValueSerializer(objectMapper, "typeName"); - 
+		objectMapper.enableDefaultTypingAsProperty(DefaultTyping.NON_FINAL, "typeName");
+		final GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
+		this.serializationPair = SerializationPair.fromSerializer(serializer);
 	}
 
 	/**
