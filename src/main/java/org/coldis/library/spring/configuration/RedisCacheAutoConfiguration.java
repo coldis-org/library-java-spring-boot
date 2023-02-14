@@ -87,15 +87,18 @@ public class RedisCacheAutoConfiguration {
 	 * Default constructor.
 	 */
 	public RedisCacheAutoConfiguration(final Jackson2ObjectMapperBuilder builder) {
-		final ObjectMapper objectMapper time= builder.build();
+		final ObjectMapper objectMapper = builder.build();
 		objectMapper.registerModule(ObjectMapperHelper.getDateTimeModule());
 		final Builder polymorphicTypeValidatorBuilder = BasicPolymorphicTypeValidator.builder();
 		final List<String> packages = new ArrayList<>();
-		packages.addAll(this.jsonTypePackages);
+		if (this.jsonTypePackages != null) {
+			packages.addAll(this.jsonTypePackages);
+		}
 		packages.add(DefaultAutoConfiguration.BASE_PACKAGE);
 		packages.add("java.lang");
 		packages.add("java.time");
 		packages.add("java.util");
+		packages.add("java.math");
 		packages.stream().forEach(packageName -> polymorphicTypeValidatorBuilder.allowIfSubType(packageName + "."));
 		objectMapper.activateDefaultTypingAsProperty(polymorphicTypeValidatorBuilder.build(), DefaultTyping.NON_FINAL, "typeName");
 		TypeResolverBuilder<?> typer = DefaultTypeResolverBuilder.construct(DefaultTyping.NON_FINAL, polymorphicTypeValidatorBuilder.build());
