@@ -3,7 +3,7 @@ package org.coldis.library.test.spring.cache;
 /**
  * Object.
  */
-public class CacheSimpleObject {
+public class CacheSimpleObject1 {
 
 	/**
 	 * Attribute.
@@ -32,7 +32,7 @@ public class CacheSimpleObject {
 	/**
 	 * Constructor.
 	 */
-	public CacheSimpleObject() {
+	public CacheSimpleObject1() {
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class CacheSimpleObject {
 	 *
 	 * @param attribute Attribute.
 	 */
-	public CacheSimpleObject(final Integer attribute) {
+	public CacheSimpleObject1(final Integer attribute) {
 		super();
 		this.attribute = attribute;
 	}

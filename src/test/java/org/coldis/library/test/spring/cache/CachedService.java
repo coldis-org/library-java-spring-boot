@@ -39,9 +39,9 @@ public class CachedService {
 			cacheManager = "secondsExpirationCentralCacheManager",
 			value = "cachedService-getFromCentralCache2"
 	)
-	public CacheSimpleObject getFromCentralCache2() {
+	public CacheSimpleObject1 getFromCentralCache2() {
 		CachedService.ATTR_1++;
-		return new CacheSimpleObject(CachedService.ATTR_1);
+		return new CacheSimpleObject1(CachedService.ATTR_1);
 	}
 
 	/**
@@ -56,6 +56,20 @@ public class CachedService {
 	public BigDecimal getFromCentralCache3() {
 		CachedService.ATTR_1++;
 		return new BigDecimal(CachedService.ATTR_1);
+	}
+
+	/**
+	 * Gets the aTTR_1.
+	 *
+	 * @return The aTTR_1.
+	 */
+	@Cacheable(
+			cacheManager = "secondsExpirationCentralCacheManager",
+			value = "cachedService-getFromCentralCache4"
+	)
+	public CacheSimpleObject2 getFromCentralCache4() {
+		CachedService.ATTR_1++;
+		return new CacheSimpleObject2(new BigDecimal(CachedService.ATTR_1));
 	}
 
 	/**
@@ -81,9 +95,9 @@ public class CachedService {
 			cacheManager = "secondsExpirationLocalCacheManager",
 			value = "cachedService-getFromLocalCache2"
 	)
-	public CacheSimpleObject getFromLocalCache2() {
+	public CacheSimpleObject1 getFromLocalCache2() {
 		CachedService.ATTR_1++;
-		return new CacheSimpleObject(CachedService.ATTR_1);
+		return new CacheSimpleObject1(CachedService.ATTR_1);
 	}
 
 	/**
@@ -98,6 +112,20 @@ public class CachedService {
 	public BigDecimal getFromLocalCache3() {
 		CachedService.ATTR_1++;
 		return new BigDecimal(CachedService.ATTR_1);
+	}
+
+	/**
+	 * Gets the aTTR_1.
+	 *
+	 * @return The aTTR_1.
+	 */
+	@Cacheable(
+			cacheManager = "secondsExpirationLocalCacheManager",
+			value = "cachedService-getFromLocalCache4"
+	)
+	public CacheSimpleObject2 getFromLocalCache4() {
+		CachedService.ATTR_1++;
+		return new CacheSimpleObject2(new BigDecimal(CachedService.ATTR_1));
 	}
 
 }

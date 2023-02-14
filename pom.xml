@@ -46,6 +46,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.coldis.library</groupId>
+			<artifactId>serialization</artifactId>
+			<version>1.0.2</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.coldis.library</groupId>
 			<artifactId>test</artifactId>
 			<version>1.0.1</version>
 			<scope>test</scope>
