@@ -1,5 +1,7 @@
 package org.coldis.library.test.spring.cache;
 
+import java.util.List;
+
 /**
  * Object.
  */
@@ -9,6 +11,7 @@ public class CacheSimpleObject1 {
 	 * Attribute.
 	 */
 	private Integer attribute;
+	
 
 	/**
 	 * Gets the attribute.

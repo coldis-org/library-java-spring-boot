@@ -1,6 +1,7 @@
 package org.coldis.library.test.spring.cache;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.coldis.library.model.view.ModelView;
 import org.coldis.library.serialization.json.NumberDeserializer;
@@ -19,6 +20,11 @@ public class CacheSimpleObject2 {
 	 * Attribute.
 	 */
 	private BigDecimal attribute;
+
+	/**
+	 * List.
+	 */
+	private List<CacheSimpleObject2> list;
 
 	/**
 	 * Gets the attribute.
@@ -43,9 +49,29 @@ public class CacheSimpleObject2 {
 	}
 
 	/**
+	 * Gets the list.
+	 *
+	 * @return The list.
+	 */
+	public List<CacheSimpleObject2> getList() {
+		return this.list;
+	}
+
+	/**
+	 * Sets the list.
+	 *
+	 * @param list New list.
+	 */
+	public void setList(
+			final List<CacheSimpleObject2> list) {
+		this.list = list;
+	}
+
+	/**
 	 * Constructor.
 	 */
 	public CacheSimpleObject2() {
+		super();
 	}
 
 	/**
@@ -56,6 +82,17 @@ public class CacheSimpleObject2 {
 	public CacheSimpleObject2(final BigDecimal attribute) {
 		super();
 		this.attribute = attribute;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param attribute Attribute.
+	 */
+	public CacheSimpleObject2(final BigDecimal attribute, final List<CacheSimpleObject2> list) {
+		super();
+		this.attribute = attribute;
+		this.list = list;
 	}
 
 }
