@@ -71,7 +71,8 @@ public class CachedService {
 	)
 	public CacheSimpleObject2 getFromCentralCache4() {
 		CachedService.ATTR_1++;
-		return new CacheSimpleObject2(new BigDecimal(CachedService.ATTR_1), List.of(new CacheSimpleObject2(new BigDecimal(CachedService.ATTR_1))));
+		return new CacheSimpleObject2(new BigDecimal(CachedService.ATTR_1),
+				new ArrayList<>(List.of(new CacheSimpleObject2(new BigDecimal(CachedService.ATTR_1)))));
 	}
 
 	/**
