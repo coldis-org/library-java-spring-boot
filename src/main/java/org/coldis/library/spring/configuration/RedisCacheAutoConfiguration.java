@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.Arrays;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.coldis.library.serialization.ObjectMapperHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -82,8 +83,9 @@ public class RedisCacheAutoConfiguration {
 	/**
 	 * Default constructor.
 	 */
-	public RedisCacheAutoConfiguration() {
-		final ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
+	public RedisCacheAutoConfiguration(final Jackson2ObjectMapperBuilder builder) {
+		final ObjectMapper objectMapper = builder.build();
+		objectMapper.registerModule(ObjectMapperHelper.getDateTimeModule());
 		final Builder polymorphicTypeValidatorBuilder = BasicPolymorphicTypeValidator.builder();
 		Arrays.stream(ArrayUtils.add(this.jsonTypePackages, DefaultAutoConfiguration.BASE_PACKAGE))
 				.forEach(packageName -> polymorphicTypeValidatorBuilder.allowIfSubType(packageName + "."));
