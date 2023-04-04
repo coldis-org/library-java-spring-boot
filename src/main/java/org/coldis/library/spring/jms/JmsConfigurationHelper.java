@@ -8,7 +8,6 @@ import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jms.JmsPoolConnectionFactoryFactory;
 import org.springframework.boot.autoconfigure.jms.JmsProperties.AcknowledgeMode;
-import org.springframework.boot.autoconfigure.jms.artemis.ArtemisProperties;
 import org.springframework.boot.autoconfigure.jms.artemis.ExtensibleArtemisConnectionFactoryFactory;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
@@ -30,9 +29,16 @@ public class JmsConfigurationHelper {
 	 */
 	public static ConnectionFactory createJmsConnectionFactory(
 			final ListableBeanFactory beanFactory,
-			final ArtemisProperties properties) {
-		return new JmsPoolConnectionFactoryFactory(properties.getPool()).createPooledConnectionFactory(
-				new ExtensibleArtemisConnectionFactoryFactory(beanFactory, properties).createConnectionFactory(ActiveMQConnectionFactory.class));
+			final ExtendedArtemisProperties properties) {
+		final ActiveMQConnectionFactory connectionFactory = new ExtensibleArtemisConnectionFactoryFactory(beanFactory, properties)
+				.createConnectionFactory(ActiveMQConnectionFactory.class);
+		connectionFactory.setClientFailureCheckPeriod(
+				properties.getClientFailureCheckPeriod() == null ? connectionFactory.getClientFailureCheckPeriod() : properties.getClientFailureCheckPeriod());
+		connectionFactory.setConnectionTTL(properties.getConnectionTTL() == null ? connectionFactory.getConnectionTTL() : properties.getConnectionTTL());
+		connectionFactory.setCallTimeout(properties.getCallTimeout() == null ? connectionFactory.getCallTimeout() : properties.getCallTimeout());
+		connectionFactory.setCallFailoverTimeout(
+				properties.getCallFailoverTimeout() == null ? connectionFactory.getCallFailoverTimeout() : properties.getCallFailoverTimeout());
+		return new JmsPoolConnectionFactoryFactory(properties.getPool()).createPooledConnectionFactory(connectionFactory);
 	}
 
 	/**

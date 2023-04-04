@@ -2,6 +2,7 @@ package org.coldis.library.test.spring.jms;
 
 import javax.jms.ConnectionFactory;
 
+import org.coldis.library.spring.jms.ExtendedArtemisProperties;
 import org.coldis.library.spring.jms.JmsConfigurationHelper;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class JmsConfiguration {
 	private DestinationResolver destinationResolver;
 
 	@Component
-	public class TestArtemisProperties extends ArtemisProperties {
+	public class TestArtemisProperties extends ExtendedArtemisProperties {
 
 	}
 
@@ -52,7 +53,7 @@ public class JmsConfiguration {
 	@Bean
 	public ConnectionFactory createJmsConnectionFactory(
 			final ListableBeanFactory beanFactory,
-			final ArtemisProperties properties) {
+			final ExtendedArtemisProperties properties) {
 		return JmsConfigurationHelper.createJmsConnectionFactory(beanFactory, properties);
 	}
 
