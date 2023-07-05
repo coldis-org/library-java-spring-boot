@@ -127,6 +127,7 @@ public class JmsConfigurationHelper {
 	 * @param  backoffMaxElapsedTime  Back-off max interval.
 	 * @return                        The JMS container factory.
 	 */
+	@Deprecated
 	public static DefaultJmsListenerContainerFactory createJmsTopicContainerFactory(
 			final ConnectionFactory connectionFactory,
 			final DestinationResolver destinationResolver,
@@ -155,7 +156,6 @@ public class JmsConfigurationHelper {
 	 * @param  backoffMaxElapsedTime  Back-off max interval.
 	 * @return                        The JMS container factory.
 	 */
-	@Deprecated
 	public static DefaultJmsListenerContainerFactory createJmsTopicContainerFactory(
 			final ConnectionFactory connectionFactory,
 			final DestinationResolver destinationResolver,

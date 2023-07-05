@@ -20,6 +20,7 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 
@@ -83,6 +84,7 @@ public class RedisCacheAutoConfiguration {
 	public RedisCacheAutoConfiguration(final Jackson2ObjectMapperBuilder builder) {
 		final ObjectMapper objectMapper = builder.build();
 		objectMapper.registerModule(ObjectMapperHelper.getDateTimeModule());
+		objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		GenericJackson2JsonRedisSerializer.registerNullValueSerializer(objectMapper, "typeName");
 		objectMapper.enableDefaultTypingAsProperty(DefaultTyping.NON_FINAL, "typeName");
 		final GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer(objectMapper);
