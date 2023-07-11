@@ -5,7 +5,6 @@ import javax.jms.ExceptionListener;
 
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jms.JmsPoolConnectionFactoryFactory;
 import org.springframework.boot.autoconfigure.jms.JmsProperties.AcknowledgeMode;
 import org.springframework.boot.autoconfigure.jms.artemis.ArtemisProperties;
@@ -204,7 +203,6 @@ public class JmsConfigurationHelper {
 	 * @return                     The JMS template.
 	 */
 	public static JmsTemplate createJmsTopicTemplate(
-			@Qualifier(value = "communicationServiceJmsConnectionFactory")
 			final ConnectionFactory connectionFactory,
 			final DestinationResolver destinationResolver,
 			final MessageConverter messageConverter) {
