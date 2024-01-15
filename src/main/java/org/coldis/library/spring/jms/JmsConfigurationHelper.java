@@ -1,12 +1,9 @@
 package org.coldis.library.spring.jms;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.ExceptionListener;
-
 import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.boot.autoconfigure.jms.AcknowledgeMode;
 import org.springframework.boot.autoconfigure.jms.JmsPoolConnectionFactoryFactory;
-import org.springframework.boot.autoconfigure.jms.JmsProperties.AcknowledgeMode;
 import org.springframework.boot.autoconfigure.jms.artemis.ArtemisProperties;
 import org.springframework.boot.autoconfigure.jms.artemis.ExtensibleArtemisConnectionFactoryFactory;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
@@ -14,6 +11,9 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.backoff.ExponentialBackOff;
+
+import jakarta.jms.ConnectionFactory;
+import jakarta.jms.ExceptionListener;
 
 /**
  * JMS configuration helper.

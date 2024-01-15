@@ -2,7 +2,10 @@ package org.coldis.library.spring.configuration;
 
 import java.util.Locale;
 
-import org.coldis.library.spring.controller.ControllerExceptionHandler;
+import org.coldis.library.service.controller.ControllerExceptionHandler;
+import org.coldis.library.service.helper.AspectJAutoConfiguration;
+import org.coldis.library.service.helper.CsvMapperAutoConfiguration;
+import org.coldis.library.service.helper.JsonMapperAutoConfiguration;
 import org.coldis.library.spring.installer.DataInstaller;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -19,13 +22,19 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
  * Default configuration.
  */
 @Configuration
-@ConditionalOnProperty(name = "org.coldis.configuration.default-enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(
+		name = "org.coldis.configuration.default-enabled",
+		havingValue = "true",
+		matchIfMissing = true
+)
 @PropertySource(
 		value = { DefaultAutoConfiguration.DEFAULT_PROPERTIES, DefaultAutoConfiguration.INTEGRATION_PROPERTIES },
-		ignoreResourceNotFound = true)
-@AutoConfigureBefore(value = { AspectJAutoConfiguration.class, JsonMapperAutoConfiguration.class,
-				CsvMapperAutoConfiguration.class, DateTimeFormatterAutoConfiguration.class, JmsAutoConfiguration.class,
-				ValidatorAutoConfiguration.class, ControllerExceptionHandler.class, DataInstaller.class })
+		ignoreResourceNotFound = true
+)
+@AutoConfigureBefore(
+		value = { AspectJAutoConfiguration.class, JsonMapperAutoConfiguration.class, CsvMapperAutoConfiguration.class, DateTimeFormatterAutoConfiguration.class,
+				JmsAutoConfiguration.class, ValidatorAutoConfiguration.class, ControllerExceptionHandler.class, DataInstaller.class }
+)
 public class DefaultAutoConfiguration {
 
 	/**
@@ -42,38 +51,5 @@ public class DefaultAutoConfiguration {
 	 * Integration properties.
 	 */
 	public static final String INTEGRATION_PROPERTIES = "classpath:integration.properties";
-
-	/**
-	 * Creates the locale resolver.
-	 *
-	 * @return The locale resolver.
-	 */
-	@Primary
-	@Bean(name = "localeResolver")
-	public LocaleResolver createLocaleResolver() {
-		// Creates the locale resolver.
-		final SessionLocaleResolver sessionLocaleResolver = new SessionLocaleResolver();
-		// Default locale is US.
-		sessionLocaleResolver.setDefaultLocale(Locale.US);
-		// Returns the configured locale resolver.
-		return sessionLocaleResolver;
-	}
-
-	/**
-	 * Creates the message source.
-	 *
-	 * @return The message source.
-	 */
-	@Primary
-	@Bean(name = "messageSource")
-	public ReloadableResourceBundleMessageSource createMessageSource() {
-		// Creates the message source.
-		final ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-		// Sets the base path and expiration (30 minutes).
-		messageSource.setBasename("classpath:locale/messages");
-		messageSource.setCacheSeconds(1800);
-		// Returns the configured message source.
-		return messageSource;
-	}
 
 }
