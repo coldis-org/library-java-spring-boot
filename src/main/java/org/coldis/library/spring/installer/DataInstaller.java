@@ -1,8 +1,10 @@
 package org.coldis.library.spring.installer;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -336,6 +338,8 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 					return resource1.getFilename().compareTo(resource2.getFilename());
 				}
 			});
+
+			final Map<String, CompletableFuture<Void>> asyncInstallTasks = new HashMap<>();
 			// Installs each data set.
 			for (final Resource dataSet : dataSets) {
 				// Gets the data set content.
@@ -357,19 +361,30 @@ public class DataInstaller implements ApplicationListener<ApplicationReadyEvent>
 				// If the data should not be ignored.
 				else {
 					if (dataSetMetadata.getAsynchronously()) {
-						CompletableFuture.runAsync(new Runnable() {
+						final CompletableFuture<Void> asyncTask = CompletableFuture.runAsync(new Runnable() {
 
 							@Override
 							public void run() {
 								DataInstaller.this.installDataSet(dataSetName, dataSetMetadata);
 							}
 						}, DataInstaller.THREAD_POOL);
+						asyncInstallTasks.put(dataSetName, asyncTask);
 					}
 					else {
 						// Installs the data set.
 						this.installDataSet(dataSetName, dataSetMetadata);
 					}
 				}
+			}
+
+			if (!asyncInstallTasks.isEmpty()) {
+				DataInstaller.LOGGER.info(
+						"Waiting for async tasks: {} to complete", String.join(", ", asyncInstallTasks.keySet()));
+				asyncInstallTasks.values().forEach((task) -> {
+					try {
+						task.join();
+					} catch (final Exception ignored) {}
+				});
 			}
 			DataInstaller.LOGGER.info("Finishing data installer");
 		}
